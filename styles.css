@@ -39,33 +39,40 @@ ul{
     gap: 100px;
 
 }
+
 h1{
     font-size: 48px;
     font-weight: bolder;
-    color: #f9fafb
+    color: olivedrab;
 }
 .content{
     display:flex;
     flex-direction: row;
-    margin:50px;
+    margin: 10px;
 }
-.content-left, .content-right{
-    display: flex;
-    justify-content: center;
-    align-items: right;
+
+/* EST 2020       */
+.content-left{
+    display:flex;
     flex-direction: column;
-    width: 100%;
+    width: 60%;
+    margin-left: 50px; 
    
 }
 /* TO CHANGE THE KYOTO PICTURE */
 .content-right{
-    width: 125%;
-    margin-bottom: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: right;
+    flex-direction: column;
+    width: 60%;
+    margin-bottom: 20px;
+    
 }
 .content-left-text{
     font-size: 22px;
-    color: olivedrab;
-    margin: 13px;
+    color: #f9fafb;
+    margin: 0px;
 
 }
 
