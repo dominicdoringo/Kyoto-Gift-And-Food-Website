@@ -33,9 +33,10 @@ ul{
 
 .navbar-left , .navbar-right{
     display:flex;
-    width: 50%;
+    width: 100%;
     justify-content: center;
     align-items: center;
+    gap: 100px;
 
 }
 h1{
@@ -51,12 +52,19 @@ h1{
 .content-left, .content-right{
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: right;
     flex-direction: column;
-    width: 50%;
+    width: 100%;
+   
+}
+.content-left-text{
+    font-size: 22px;
+    color: olivedrab;
+    margin: 13px;
+
 }
 
-
 .img{
-    margin: 100px;
+    margin: auto;
+    
 }
