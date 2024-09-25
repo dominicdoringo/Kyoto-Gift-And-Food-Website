@@ -98,65 +98,60 @@ h1{
 
 
 /* SECOND SECTION  */
-.featured-section{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+.featured-section {
+  padding: 20px;
+  background-color: #f5f5f5;
 }
 
-/* FEATURED ITEMS SECTION */
-h2{
-    font-size: 36px;
-    font-weight: bolder;
-    color: #8e8e00;
-}
-section{
-    display: block;
-}
-.featured-section{
-    box-sizing: border-box;
-
+.featured-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1px;
 }
 
-.featured-grid {
-    display: grid;
-    
-    gap: 15px;
-    padding: 0 20px;
-    align-content: center;
-    justify-items: end;
-    justify-content: start;
-}
-.featured-card{
-    display:flex;
-    flex-direction: column;
-    padding: 20px;
-    text-align: center;
-    border-radius: 4px;
-    
-}
-.featured-card img{
-    width: 55%;
-    height: 60%;
-    justify-content: center;
-    margin-bottom: 20px;
-    border-radius: 4px;
-    
-  
+.featured-item {
+  flex: 1 1 calc(24% - 20px); /* Slightly reduces the width of each item to make space */
+  max-width: calc(24% - 20px); /* Ensures that items stay within bounds */
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  text-align: center;
 }
 
-.featured-card h3 {
-    font-size: 20px;
-    margin-bottom: 10px;
+.featured-item img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
 }
 
-h3 {
-    display: block;
-    font-size: 1.17em;
-    margin-block-start: 1em;
-    margin-block-end: 1em;
-    margin-inline-start: 0px;
-    margin-inline-end: 0px;
-    font-weight: bold;
-    unicode-bidi: isolate;
+.featured-item h3 {
+  margin: 10px 0;
+  font-size: 18px;
+}
+
+.featured-item p {
+  font-size: 14px;
+  color: #666;
+}
+
+/* Responsive Layout */
+@media (max-width: 1200px) {
+  .featured-item {
+    flex: 1 1 calc(32% - 20px); /* 3 items per row on smaller screens */
+  }
+}
+
+@media (max-width: 900px) {
+  .featured-item {
+    flex: 1 1 calc(48% - 20px); /* 2 items per row on smaller screens */
+  }
+}
+
+@media (max-width: 600px) {
+  .featured-item {
+    flex: 1 1 100%; /* Full width on small screens */
+  }
 }
