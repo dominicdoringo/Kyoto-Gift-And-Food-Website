@@ -11,27 +11,13 @@ body{
     background-color: #1F2937;
 }
 
-#header-logo{
-    font-size: 24px;
-    color: white;
-}   
-/*Navbar Shop Catagories,Order,Sushi Sign in */
-.header-link{
-    font-size: 18px;
-    color: #f9fafb;
-    margin: 13px;
-}
+/* VERY TOP OF THE WEB PAGE     */
 .navbar{
     display: flex;
     flex-direction: row;
 }
-ul{
-    display: flex;
-    flex-direction: row;
 
-}
-
-.navbar-left , .navbar-right{
+.navbar-left{
     display:flex;
     width: 100%;
     justify-content: center;
@@ -40,18 +26,40 @@ ul{
 
 }
 
-h1{
-    font-size: 48px;
-    font-weight: bolder;
-    color: olivedrab;
+#header-logo{
+    font-size: 24px;
+    color: white;
+}   
+
+.navbar-right{
+    display:flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    gap: 100px;
+
 }
+
+.header-link{
+    font-size: 18px;
+    color: #f9fafb;
+    margin: 13px;
+}
+
+ul{
+    display: flex;
+    flex-direction: row;
+
+}
+/* The About section of the Website Big paragraph on left, picture on right   */
+
 .content{
     display:flex;
     flex-direction: row;
     margin: 10px;
 }
 
-/* EST 2020       */
+
 .content-left{
     display:flex;
     flex-direction: column;
@@ -59,6 +67,20 @@ h1{
     margin-left: 50px; 
    
 }
+/*  ESTABLISHED IN 1988 BIG TEXT    */
+h1{
+    font-size: 48px;
+    font-weight: bolder;
+    color: olivedrab;
+}
+/*  Long blurb about what the store offers    */
+.content-left-text{
+    font-size: 22px;
+    color: #f9fafb;
+    margin: 0px;
+
+}
+
 /* TO CHANGE THE KYOTO PICTURE */
 .content-right{
     display: flex;
@@ -69,18 +91,20 @@ h1{
     margin-bottom: 20px;
     
 }
-.content-left-text{
-    font-size: 22px;
-    color: #f9fafb;
-    margin: 0px;
-
-}
-
-.img{
+/* TO CHANGE THE KYOTO PICTURE */
+.kyoto-picture{
     margin: auto;
-    
 }
 
+
+/* SECOND SECTION  */
+.second-section{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* FEATURED ITEAMS HEADER */
 h2{
     font-size: 36px;
     font-weight: bolder;
@@ -103,11 +127,7 @@ h2{
     border-radius: 5px;
 }
 
-.second-section{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
+
 
 .p-second{
     font-size: 15px;
