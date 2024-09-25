@@ -71,7 +71,7 @@ ul{
 h1{
     font-size: 48px;
     font-weight: bolder;
-    color: olivedrab;
+    color:#8e8e00;
 }
 /*  Long blurb about what the store offers    */
 .content-left-text{
@@ -108,7 +108,7 @@ h1{
 h2{
     font-size: 36px;
     font-weight: bolder;
-    color: olivedrab;
+    color: #8e8e00;
 }
 
 .row-of-blue-divs{
