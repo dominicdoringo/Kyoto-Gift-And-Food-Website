@@ -80,3 +80,36 @@ h1{
     margin: auto;
     
 }
+
+h2{
+    font-size: 36px;
+    font-weight: bolder;
+    color: olivedrab;
+}
+
+.row-of-blue-divs{
+    display:flex;
+    flex-direction: row;
+    justify-content: space-between;
+    max-width: 100%;
+    margin: 100px;
+    align-items: center;
+}
+
+.box-blue{
+    border: 3px solid #1F2937;
+    width: 200px;
+    height: 200px;
+    border-radius: 5px;
+}
+
+.second-section{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.p-second{
+    font-size: 15px;
+    text-align: center;
+}
