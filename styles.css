@@ -107,31 +107,33 @@ h1{
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  gap: 1px;
+  gap: 10px;
 }
 
 .featured-item {
-  flex: 1 1 calc(24% - 20px); /* Slightly reduces the width of each item to make space */
+  flex: 1 1 calc(20% - 20px); /* Slightly reduces the width of each item to make space */
   max-width: calc(24% - 20px); /* Ensures that items stay within bounds */
   background-color: #fff;
   border: 1px solid #ccc;
   border-radius: 8px;
-  padding: 15px;
+  padding: 10px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   text-align: center;
 }
 
 .featured-item img {
-  max-width: 100%;
+  max-width: 70%;
   height: auto;
   border-radius: 8px;
 }
 
+/*  Title of item  */
 .featured-item h3 {
   margin: 10px 0;
   font-size: 18px;
 }
 
+/* description of item */
 .featured-item p {
   font-size: 14px;
   color: #666;
