@@ -1,3 +1,4 @@
+
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Serif:ital,opsz,wght@0,8..144,100..900;1,8..144,100..900&display=swap');
 *{
     margin: 0;
@@ -156,4 +157,48 @@ h1{
   .featured-item {
     flex: 1 1 100%; /* Full width on small screens */
   }
+}
+
+/* Footer Styling */
+footer {
+  background-color: #1F2937;
+  color: white;
+  padding: 20px 0;
+}
+
+.footer-container {
+  display: flex;
+  justify-content: space-around;
+  padding: 20px;
+  flex-wrap: wrap;
+}
+
+.footer-column {
+  flex: 1 1 30%;
+  margin: 10px;
+}
+
+.footer-column h4 {
+  margin-bottom: 10px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.footer-column p {
+  font-size: 14px;
+}
+
+.footer-column a {
+  color: #8e8e00;
+  text-decoration: none;
+}
+
+.footer-column a:hover {
+  text-decoration: underline;
+}
+
+.footer-bottom {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 12px;
 }
