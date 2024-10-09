@@ -1,204 +1,165 @@
-
-@import url('https://fonts.googleapis.com/css2?family=Roboto+Serif:ital,opsz,wght@0,8..144,100..900;1,8..144,100..900&display=swap');
-*{
-    margin: 0;
-    padding: 0;
+/* General reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Arial', sans-serif;
 }
 
-body{
-    font-family: "Roboto Serif", serif;
-}
-.first-section{
-    background-color: #1F2937;
-}
-
-/* VERY TOP OF THE WEB PAGE     */
-.navbar{
-    display: flex;
-    flex-direction: row;
+/* Body styling */
+body {
+  background-color: #f4f4f4;
+  color: #333;
+  padding: 20px;
 }
 
-.navbar-left{
-    display:flex;
-    width: 100%;
-    justify-content: center;
-    align-items: center;
-    gap: 100px;
-
+/* Navbar styling */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #2d5c73;
+  padding: 15px;
 }
 
-#header-logo{
-    font-size: 24px;
-    color: white;
-}   
-
-.navbar-right{
-    display:flex;
-    width: 100%;
-    justify-content: center;
-    align-items: center;
-    gap: 100px;
-
+#header-logo {
+  color: white;
+  font-size: 1.8rem;
+  font-weight: bold;
 }
 
-.header-link{
-    font-size: 18px;
-    color: #f9fafb;
-    margin: 13px;
+.navbar-right ul {
+  display: flex;
+  gap: 20px;
 }
 
-ul{
-    display: flex;
-    flex-direction: row;
-
-}
-/* The About section of the Website Big paragraph on left, picture on right   */
-
-.content{
-    display:flex;
-    flex-direction: row;
-    margin: 10px;
+.header-link {
+  display: inline;
+  color: white;
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
 }
 
-
-.content-left{
-    display:flex;
-    flex-direction: column;
-    width: 60%;
-    margin-left: 50px; 
-   
-}
-/*  ESTABLISHED IN 1988 BIG TEXT    */
-h1{
-    font-size: 48px;
-    font-weight: bolder;
-    color:#8e8e00;
-}
-/*  Long blurb about what the store offers    */
-.content-left-text{
-    font-size: 22px;
-    color: #f9fafb;
-    margin: 0px;
-
+.header-link:hover {
+  text-decoration: underline;
 }
 
-/* TO CHANGE THE KYOTO PICTURE */
-.content-right{
-    display: flex;
-    justify-content: center;
-    align-items: right;
-    flex-direction: column;
-    width: 60%;
-    margin-bottom: 20px;
-    
-}
-/* TO CHANGE THE KYOTO PICTURE */
-.kyoto-picture{
-    margin: auto;
+/* First section styling */
+.first-section {
+  padding: 50px 0;
 }
 
+.content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 30px;
+}
 
-/* SECOND SECTION  */
+.content-left {
+  max-width: 50%;
+}
+
+.content-left h1 {
+  font-size: 2.5rem;
+  color: #2d5c73;
+  margin-bottom: 15px;
+}
+
+.content-left-text {
+  font-size: 1.2rem;
+  line-height: 1.6;
+}
+
+.kyoto-picture {
+  max-width: 450px;
+  border-radius: 8px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Featured section */
 .featured-section {
-  padding: 22px;
-  background-color: #f5f5f5;
+  text-align: center;
+  padding: 50px 0;
+  background-color: #ffffff;
+}
+
+.featured-section h2 {
+  font-size: 2rem;
+  color: #2d5c73;
+  margin-bottom: 30px;
 }
 
 .featured-container {
   display: flex;
+  justify-content: space-around;
   flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 10px;
+  gap: 20px;
 }
 
 .featured-item {
-  flex: 1 1 calc(20% - 20px); /* Slightly reduces the width of each item to make space */
-  max-width: calc(24% - 20px); /* Ensures that items stay within bounds */
-  background-color: #fff;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  padding: 10px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  text-align: center;
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  width: 250px;
 }
 
 .featured-item img {
-  max-width: 70%;
-  height: auto;
-  border-radius: 8px;
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 15px;
 }
 
-/*  Title of item  */
 .featured-item h3 {
-  margin: 10px 0;
-  font-size: 18px;
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  color: #2d5c73;
 }
 
-/* description of item */
 .featured-item p {
-  font-size: 14px;
-  color: #666;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #555;
 }
 
-/* Responsive Layout */
-@media (max-width: 1200px) {
-  .featured-item {
-    flex: 1 1 calc(32% - 20px); /* 3 items per row on smaller screens */
-  }
-}
-
-@media (max-width: 900px) {
-  .featured-item {
-    flex: 1 1 calc(48% - 20px); /* 2 items per row on smaller screens */
-  }
-}
-
-@media (max-width: 600px) {
-  .featured-item {
-    flex: 1 1 100%; /* Full width on small screens */
-  }
-}
-
-/* Footer Styling */
+/* Footer */
 footer {
-  background-color: #1F2937;
+  background-color: #2d5c73;
   color: white;
-  padding: 20px 0;
+  padding: 50px 20px;
 }
 
 .footer-container {
   display: flex;
-  justify-content: space-around;
-  padding: 20px;
-  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 50px;
 }
 
 .footer-column {
-  flex: 1 1 30%;
-  margin: 10px;
+  flex: 1;
 }
 
 .footer-column h4 {
-  margin-bottom: 10px;
-  font-size: 18px;
-  font-weight: bold;
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+  color: white;
 }
 
 .footer-column p {
-  font-size: 14px;
-}
-
-.footer-column a {
-  color: #8e8e00;
-  text-decoration: none;
-}
-
-.footer-column a:hover {
-  text-decoration: underline;
+  font-size: 1rem;
+  line-height: 1.8;
 }
 
 .footer-bottom {
   text-align: center;
-  margin-top: 20px;
-  font-size: 12px;
+  margin-top: 30px;
+}
+
+.footer-bottom p {
+  font-size: 0.9rem;
+  color: #ccc;
 }
