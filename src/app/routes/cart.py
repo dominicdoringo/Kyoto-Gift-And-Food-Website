@@ -6,9 +6,11 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 import app.services.cart as cart_service
-from app.dependencies import get_db
 
-from app.core.database import get_db
+#This might be an issue ? from app.core.database import get_db we are getting it from dependencies and not core data base idk should ask a question about this later
+from app.dependencies import get_db 
+
+
 from app.schemas.cart import (
     CartItemCreate,
     CartItemResponse,
