@@ -6,6 +6,8 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 import app.services.cart as cart_service
+from app.dependencies import get_db
+
 from app.core.database import get_db
 from app.schemas.cart import (
     CartItemCreate,
@@ -15,6 +17,7 @@ from app.schemas.cart import (
     CartClearResponse,
 )
 from app.models.user import User  # Assuming you have a User model
+
 
 router = APIRouter()
 
