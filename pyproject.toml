@@ -32,7 +32,6 @@ dependencies = [
     "python-dotenv>=1.0.1",
     "sqlalchemy>=2.0.36",
     "sqlmodel>=0.0.22",
-    "python-jose[cryptography]>=3.3.0"
 ]
 
 [project.urls]
@@ -79,4 +78,11 @@ exclude_lines = [
   "no cov",
   "if __name__ == .__main__.:",
   "if TYPE_CHECKING:",
+]
+
+[tool.ruff.lint.flake8-bugbear]
+extend-immutable-calls = [
+    # Whitelisted default arguments
+    "fastapi.Header",
+    "fastapi.Depends",
 ]
