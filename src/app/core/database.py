@@ -1,3 +1,5 @@
+# app/core/database.py
+
 from sqlmodel import SQLModel, create_engine
 from app.core.config import settings
 
@@ -9,7 +11,6 @@ engine = create_engine(
     echo=True,  # Set to False in production
     connect_args={"check_same_thread": False}  # Required for SQLite
 )
-
 
 def init_db():
     from app import models  # Import models to register them with SQLModel
