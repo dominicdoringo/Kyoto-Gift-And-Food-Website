@@ -7,7 +7,6 @@ from sqlalchemy import (
     DateTime,
     Integer,
     String,
-    ForeignKey,
 )
 from sqlalchemy.orm import relationship
 from app.core.database import Base
@@ -21,7 +20,7 @@ class User(Base):
     email = Column(String, unique=True, index=True, nullable=False)
     password_hash = Column(String, nullable=False)
     is_active = Column(Boolean, default=True)
-    is_admin = Column(Boolean, default=False)
+    is_admin = Column(Boolean, default=False)  # Simplified admin representation
     is_reward_member = Column(Boolean, default=False)
     created_at = Column(DateTime, default=datetime.now(timezone.utc))
 
