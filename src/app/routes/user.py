@@ -1,17 +1,21 @@
-# app/routers/users.py
+# app/routers/user.py
 
 from fastapi import APIRouter, Depends, HTTPException, status, UploadFile, File
 from sqlmodel import Session
 from typing import List
-from .. import models, schemas, crud
-from ..dependencies import get_db
+
+from app import models, crud
+from app import schemas
+from app.schemas import UserCreate, UserCreateResponse  # Import required schemas directly
+from app.dependencies import get_db, get_current_active_user, get_current_active_admin
 
 router = APIRouter(prefix="/api/users", tags=["users"])
 
-@router.post("/", response_model=schemas.UserCreateResponse)
-def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
+@router.post("/", response_model=UserCreateResponse)
+def create_user(user: UserCreate, db: Session = Depends(get_db)):
     db_user = crud.create_user(db, user)
-    return {"success": True, "user": db_user}
+    return UserCreateResponse(success=True, user=db_user)
+
 
 @router.get("/", response_model=List[schemas.User])
 def list_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):

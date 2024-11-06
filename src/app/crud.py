@@ -1,36 +1,25 @@
+# app/crud.py
+
 from typing import List, Optional
 from sqlmodel import Session, select
 from fastapi import HTTPException, status
 from passlib.context import CryptContext
-from datetime import datetime
+from datetime import datetime, timedelta
 
-from . import models, schemas
+from app import models
+from app.schemas import UserCreate  # Import UserCreate directly
+from app import schemas
 
 # Password hashing utilities
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-def get_password_hash(password: str):
+def get_password_hash(password: str) -> str:
     return pwd_context.hash(password)
 
-def verify_password(plain_password: str, hashed_password: str):
+def verify_password(plain_password: str, hashed_password: str) -> bool:
     return pwd_context.verify(plain_password, hashed_password)
 
 # ------------------- User CRUD Operations -------------------
-
-def create_user(db: Session, user: schemas.UserCreate):
-    existing_user = db.exec(select(models.User).where(models.User.email == user.email)).first()
-    if existing_user:
-        raise HTTPException(status_code=400, detail="Email already registered")
-    db_user = models.User(
-        name=user.name,
-        email=user.email,
-        hashed_password=get_password_hash(user.password),
-        is_reward_member=False
-    )
-    db.add(db_user)
-    db.commit()
-    db.refresh(db_user)
-    return db_user
 
 def get_user(db: Session, user_id: int):
     user = db.get(models.User, user_id)
@@ -38,31 +27,25 @@ def get_user(db: Session, user_id: int):
         raise HTTPException(status_code=404, detail="User not found")
     return user
 
-def get_user_by_email(db: Session, email: str):
-    user = db.exec(select(models.User).where(models.User.email == email)).first()
-    return user
-
-def get_users(db: Session, skip: int = 0, limit: int = 100):
-    users = db.exec(select(models.User).offset(skip).limit(limit)).all()
-    return users
-
-def update_user(db: Session, user_id: int, user_update: schemas.UserUpdate):
-    user = get_user(db, user_id)
-    user_data = user_update.dict(exclude_unset=True)
-    if 'password' in user_data:
-        user_data['hashed_password'] = get_password_hash(user_data.pop('password'))
-    for key, value in user_data.items():
-        setattr(user, key, value)
-    db.add(user)
+def create_user(db: Session, user: UserCreate):
+    existing_user = db.exec(select(models.User).where(models.User.email == user.email)).first()
+    if existing_user:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Email already registered")
+    db_user = models.User(
+        name=user.name,
+        email=user.email,
+        hashed_password=get_password_hash(user.password),
+        is_reward_member=user.is_reward_member,
+        is_active=True,
+        is_admin=False
+    )
+    db.add(db_user)
     db.commit()
-    db.refresh(user)
-    return user
+    db.refresh(db_user)
+    return db_user
 
-def delete_user(db: Session, user_id: int):
-    user = get_user(db, user_id)
-    db.delete(user)
-    db.commit()
-    return {"success": True, "message": "User account deleted successfully"}
+
+
 
 # ------------------- Product CRUD Operations -------------------
 
@@ -361,6 +344,12 @@ def authenticate_user(db: Session, email: str, password: str):
 
 # Placeholder for token generation and refresh functions
 
+def get_user_by_email(db: Session, email: str):
+    user = db.exec(select(models.User).where(models.User.email == email)).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return user
+
 # ------------------- Admin Functions -------------------
 
 def get_sales_report(db: Session, start_date: datetime, end_date: datetime):
@@ -379,4 +368,7 @@ def deactivate_user_admin(db: Session, user_id: int):
     return {"success": True, "message": "User account deactivated"}
 
 def delete_user_admin(db: Session, user_id: int):
-    return delete_user(db, user_id)
+    user = get_user(db, user_id)
+    db.delete(user)
+    db.commit()
+    return {"success": True, "message": "User deleted successfully"}
