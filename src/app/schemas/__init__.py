@@ -21,6 +21,7 @@ from .cart import (
     CartDiscountResponse,
     CartSaveRequest,
     CartSaveResponse,
+    ProductInCart,
 )
 
 __all__ = [
@@ -46,4 +47,5 @@ __all__ = [
     "CartDiscountResponse",
     "CartSaveRequest",
     "CartSaveResponse",
+    "ProductInCart",
 ]

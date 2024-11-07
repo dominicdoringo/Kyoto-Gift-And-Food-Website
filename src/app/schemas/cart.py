@@ -4,30 +4,37 @@ from typing import List, Optional
 
 from pydantic import BaseModel
 
+from app.schemas.product import ProductBase
+
 
 class CartItemBase(BaseModel):
-    user_id: int
-    product_id: int
     quantity: int = 1
 
 
 class CartItemCreate(CartItemBase):
-    pass
+    product_id: int
+    user_id: int
 
 
 class CartItemUpdate(BaseModel):
     quantity: int
 
 
+class ProductInCart(ProductBase):
+    id: int
+
+    class Config:
+        orm_mode = True
+
+
 class CartItem(CartItemBase):
     id: int
-    name: str
-    price: float
-    total: float
+    user_id: int
+    product: ProductInCart
     created_at: datetime
 
     class Config:
-        from_attributes = True
+        orm_mode = True
 
 
 class CartAddResponse(BaseModel):
@@ -35,7 +42,7 @@ class CartAddResponse(BaseModel):
     cart: List[CartItem]
 
     class Config:
-        from_attributes = True
+        orm_mode = True
 
 
 class CartUpdateResponse(BaseModel):
@@ -43,7 +50,7 @@ class CartUpdateResponse(BaseModel):
     updated_cart: List[CartItem]
 
     class Config:
-        from_attributes = True
+        orm_mode = True
 
 
 class CartRemoveResponse(BaseModel):
@@ -51,7 +58,7 @@ class CartRemoveResponse(BaseModel):
     message: str
 
     class Config:
-        from_attributes = True
+        orm_mode = True
 
 
 class CartClearResponse(BaseModel):
@@ -59,7 +66,7 @@ class CartClearResponse(BaseModel):
     message: str
 
     class Config:
-        from_attributes = True
+        orm_mode = True
 
 
 class CartTotalResponse(BaseModel):
@@ -67,7 +74,7 @@ class CartTotalResponse(BaseModel):
     item_count: int
 
     class Config:
-        from_attributes = True
+        orm_mode = True
 
 
 class CartDiscountRequest(BaseModel):
@@ -81,7 +88,7 @@ class CartDiscountResponse(BaseModel):
     discount_applied: str
 
     class Config:
-        from_attributes = True
+        orm_mode = True
 
 
 class CartSaveRequest(BaseModel):
@@ -93,4 +100,4 @@ class CartSaveResponse(BaseModel):
     message: str
 
     class Config:
-        from_attributes = True
+        orm_mode = True

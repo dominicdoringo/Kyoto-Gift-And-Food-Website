@@ -16,4 +16,6 @@ class CartItem(Base):
     quantity = Column(Integer, nullable=False, default=1)
     created_at = Column(DateTime, default=datetime.now(timezone.utc))
 
-    # TODO: include table relationships for user and product
+    # Relationships
+    user = relationship("User", back_populates="cart_items")
+    product = relationship("Product", back_populates="cart_items")

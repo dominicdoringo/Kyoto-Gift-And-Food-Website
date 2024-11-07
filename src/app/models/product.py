@@ -1,7 +1,8 @@
-# product.py
+# models/product.py
 from datetime import datetime, timezone
 
 from sqlalchemy import Boolean, Column, DateTime, Float, Integer, String
+from sqlalchemy.orm import relationship
 
 from app.core.database import Base
 
@@ -18,4 +19,5 @@ class Product(Base):
     featured = Column(Boolean, default=False, nullable=False)
     created_at = Column(DateTime, default=datetime.now(timezone.utc))
 
-    # TODO: include table relationships for reviews and cart items
+    # Relationship to CartItems
+    cart_items = relationship("CartItem", back_populates="product", cascade="all, delete-orphan")

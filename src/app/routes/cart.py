@@ -12,13 +12,14 @@ from app.schemas.cart import (
     CartTotalResponse,
     CartAddResponse,
     CartUpdateResponse,
+    CartItem,
 )
 from typing import List
 
 router = APIRouter()
 
 
-@router.get("/", response_model=List[cart_service.CartItem])
+@router.get("/", response_model=List[CartItem])
 def get_cart_items(user_id: int, db: Session = Depends(get_db)):
     cart_items = cart_service.get_cart_items(db, user_id=user_id)
     return cart_items
@@ -26,19 +27,19 @@ def get_cart_items(user_id: int, db: Session = Depends(get_db)):
 
 @router.post("/", response_model=CartAddResponse)
 def add_cart_item(item: CartItemCreate, db: Session = Depends(get_db)):
-    cart_item = cart_service.add_cart_item(db=db, item=item)
+    cart_service.add_cart_item(db=db, item=item)
     cart_items = cart_service.get_cart_items(db, user_id=item.user_id)
     return {"success": True, "cart": cart_items}
 
 
 @router.put("/{product_id}", response_model=CartUpdateResponse)
 def update_cart_item(
-    product_id: int, 
-    item: CartItemUpdate, 
-    user_id: int, 
+    product_id: int,
+    item: CartItemUpdate,
+    user_id: int,
     db: Session = Depends(get_db)
 ):
-    updated_item = cart_service.update_cart_item(db=db, user_id=user_id, product_id=product_id, item=item)
+    cart_service.update_cart_item(db=db, user_id=user_id, product_id=product_id, item=item)
     cart_items = cart_service.get_cart_items(db, user_id=user_id)
     return {"success": True, "updated_cart": cart_items}
 
