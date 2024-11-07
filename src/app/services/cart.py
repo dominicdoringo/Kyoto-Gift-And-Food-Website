@@ -1,4 +1,4 @@
-# services/cart.py
+# service/cart.py
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
 
