@@ -8,11 +8,9 @@ from sqlalchemy import (
     ForeignKey,
     Integer,
     String,
-    Table,
 )
 from sqlalchemy.orm import relationship
 from app.core.database import Base
-
 
 class Order(Base):
     __tablename__ = "orders"
@@ -30,23 +28,16 @@ class Order(Base):
 
     # Relationships
     user = relationship("User", back_populates="orders")
-    order_items = relationship("OrderItem", back_populates="order")
-    status_history = relationship(
-        "OrderStatusHistory", back_populates="order", cascade="all, delete-orphan"
+    order_items = relationship(
+        "OrderItem",
+        back_populates="order",
+        cascade="all, delete-orphan"
     )
-
-
-class OrderItem(Base):
-    __tablename__ = "order_items"
-
-    order_id = Column(Integer, ForeignKey("orders.id"), primary_key=True)
-    product_id = Column(Integer, ForeignKey("products.id"), primary_key=True)
-    quantity = Column(Integer, nullable=False)
-    price = Column(Float, nullable=False)
-
-    # Relationships
-    order = relationship("Order", back_populates="order_items")
-    product = relationship("Product", back_populates="order_items")
+    status_history = relationship(
+        "OrderStatusHistory",
+        back_populates="order",
+        cascade="all, delete-orphan"
+    )
 
 
 class OrderStatusHistory(Base):
