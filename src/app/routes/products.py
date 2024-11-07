@@ -6,7 +6,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 import app.services.products as product_service
-from app.dependencies import get_db 
+from app.dependencies import get_db # DATA BASE ISSUE CONFUSED ABOUT 
 from app.schemas.products import (
     ProductCreate,
     ProductResponse,
