@@ -56,19 +56,19 @@ def clear_cart(user_id: int, db: Session = Depends(get_db)):
     return response
 
 
-@router.get("/total", response_model=CartTotalResponse)
-def get_cart_total(user_id: int, db: Session = Depends(get_db)):
-    total = cart_service.get_cart_total(db=db, user_id=user_id)
-    return total
+#@router.get("/total", response_model=CartTotalResponse)
+#def get_cart_total(user_id: int, db: Session = Depends(get_db)):
+ #   total = cart_service.get_cart_total(db=db, user_id=user_id)
+  #  return total
 
 
-@router.post("/discount", response_model=cart_service.CartDiscountResponse)
-def apply_discount(request: cart_service.CartDiscountRequest, db: Session = Depends(get_db)):
-    # TODO: Implement discount logic
-    raise HTTPException(status_code=501, detail="Not Implemented")
+#@router.post("/discount", response_model=cart_service.CartDiscountResponse)
+#def apply_discount(request: cart_service.CartDiscountRequest, db: Session = Depends(get_db)):
+ #   # TODO: Implement discount logic
+   # raise HTTPException(status_code=501, detail="Not Implemented")
 
 
-@router.post("/save", response_model=cart_service.CartSaveResponse)
-def save_cart(request: cart_service.CartSaveRequest, db: Session = Depends(get_db)):
+#@router.post("/save", response_model=cart_service.CartSaveResponse)
+#def save_cart(request: cart_service.CartSaveRequest, db: Session = Depends(get_db)):
     # TODO: Implement save cart functionality
-    raise HTTPException(status_code=501, detail="Not Implemented")
+ #   raise HTTPException(status_code=501, detail="Not Implemented")
