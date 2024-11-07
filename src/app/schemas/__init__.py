@@ -1,4 +1,4 @@
-# __init__.py
+# schemas/__init__.py
 from .user import UserBase, UserCreate, User, UserResponse
 from .product import (
     ProductBase,
@@ -6,6 +6,21 @@ from .product import (
     ProductUpdate,
     Product,
     ProductResponse,
+)
+from .cart import (
+    CartItemBase,
+    CartItemCreate,
+    CartItemUpdate,
+    CartItem,
+    CartAddResponse,
+    CartUpdateResponse,
+    CartRemoveResponse,
+    CartClearResponse,
+    CartTotalResponse,
+    CartDiscountRequest,
+    CartDiscountResponse,
+    CartSaveRequest,
+    CartSaveResponse,
 )
 
 __all__ = [
@@ -18,4 +33,17 @@ __all__ = [
     "ProductUpdate",
     "Product",
     "ProductResponse",
+    "CartItemBase",
+    "CartItemCreate",
+    "CartItemUpdate",
+    "CartItem",
+    "CartAddResponse",
+    "CartUpdateResponse",
+    "CartRemoveResponse",
+    "CartClearResponse",
+    "CartTotalResponse",
+    "CartDiscountRequest",
+    "CartDiscountResponse",
+    "CartSaveRequest",
+    "CartSaveResponse",
 ]

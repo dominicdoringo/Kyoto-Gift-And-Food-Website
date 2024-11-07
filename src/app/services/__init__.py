@@ -14,6 +14,14 @@ from .product import (
     update_product,
     delete_product,
 )
+from .cart import (
+    get_cart_items,
+    add_cart_item,
+    update_cart_item,
+    remove_cart_item,
+    clear_cart,
+    get_cart_total,
+)
 
 __all__ = [
     "get_user",
@@ -27,4 +35,10 @@ __all__ = [
     "create_product",
     "update_product",
     "delete_product",
+    "get_cart_items",
+    "add_cart_item",
+    "update_cart_item",
+    "remove_cart_item",
+    "clear_cart",
+    "get_cart_total",
 ]
