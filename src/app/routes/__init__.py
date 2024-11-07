@@ -1,8 +1,10 @@
 # routes/__init__.py
 from fastapi import APIRouter
-from .user import router as user_router
-from .product import router as product_router
+
+from app.routes import category, user, product
 
 api_router = APIRouter()
-api_router.include_router(user_router, prefix="/users", tags=["users"])
-api_router.include_router(product_router, prefix="/products", tags=["products"])
+
+api_router.include_router(user.router, prefix="/users", tags=["Users"])
+api_router.include_router(product.router, prefix="/products", tags=["Products"])
+api_router.include_router(category.router, prefix="/categories", tags=["Categories"])
