@@ -35,6 +35,17 @@ from .order import (
     OrderUpdateResponse,
     OrderStatusHistory,
 )
+from .reward import (
+    RewardBase,
+    RewardCreate,
+    RewardUpdate,
+    RewardRedeemRequest,
+    Reward,
+    RewardCreateResponse,
+    RewardUpdateResponse,
+    RewardCancelResponse,
+    RewardRedeemResponse,
+)
 
 __all__ = [
     "UserBase",
@@ -70,4 +81,13 @@ __all__ = [
     "OrderCreateResponse",
     "OrderUpdateResponse",
     "OrderStatusHistory",
+    "RewardBase",
+    "RewardCreate",
+    "RewardUpdate",
+    "RewardRedeemRequest",
+    "Reward",
+    "RewardCreateResponse",
+    "RewardUpdateResponse",
+    "RewardCancelResponse",
+    "RewardRedeemResponse",
 ]

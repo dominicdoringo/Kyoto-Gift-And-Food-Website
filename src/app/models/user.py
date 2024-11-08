@@ -1,4 +1,4 @@
-# models/user.py
+# models/user.py (updated)
 from datetime import datetime, timezone
 
 from sqlalchemy import Boolean, Column, DateTime, Integer, String
@@ -19,5 +19,7 @@ class User(Base):
     verification_code = Column(String, nullable=True)
     created_at = Column(DateTime, default=datetime.now(timezone.utc))
 
-    # Relationship to CartItems
+    # Relationships
     cart_items = relationship("CartItem", back_populates="user", cascade="all, delete-orphan")
+    orders = relationship("Order", back_populates="user", cascade="all, delete-orphan")
+    reward = relationship("Reward", back_populates="user", uselist=False)
