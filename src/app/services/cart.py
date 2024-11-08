@@ -110,3 +110,4 @@ def get_cart_total(db: Session, user_id: int):
     total = sum(item.product.price * item.quantity for item in cart_items if item.product)
     item_count = sum(item.quantity for item in cart_items)
     return CartTotalResponse(total=total, item_count=item_count)
+#end code

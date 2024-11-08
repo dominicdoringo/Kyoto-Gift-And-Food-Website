@@ -57,3 +57,4 @@ def authenticate_user(db: Session, username: str, password: str):
     if not verify_password(password, user.password_hash):
         return None
     return user
+#end code

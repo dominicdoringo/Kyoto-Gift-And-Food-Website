@@ -1,3 +1,4 @@
+#src/app/core/config.py
 from functools import lru_cache
 
 from dotenv import load_dotenv
@@ -19,3 +20,4 @@ def get_settings() -> Settings:
 
 
 settings = get_settings()
+#end code

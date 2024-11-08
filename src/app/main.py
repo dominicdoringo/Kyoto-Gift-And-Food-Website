@@ -1,3 +1,4 @@
+#src/app/main.py
 from fastapi import FastAPI
 
 from app.core.database import Base, engine
@@ -13,3 +14,4 @@ app.include_router(api_router)
 @app.get("/")
 def read_root():
     return {"Hello": "World"}
+#end code

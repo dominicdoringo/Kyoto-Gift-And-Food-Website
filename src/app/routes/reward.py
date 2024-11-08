@@ -46,3 +46,4 @@ def cancel_reward(user_id: int, db: Session = Depends(get_db)):
 def redeem_points(user_id: int, redeem_request: RewardRedeemRequest, db: Session = Depends(get_db)):
     response = reward_service.redeem_reward_points(db=db, user_id=user_id, points=redeem_request.points)
     return response
+#end code

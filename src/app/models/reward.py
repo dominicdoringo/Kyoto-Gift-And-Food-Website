@@ -14,3 +14,4 @@ class Reward(Base):
     points = Column(Integer, default=0, nullable=False)
 
     user = relationship("User", back_populates="reward")
+#end code

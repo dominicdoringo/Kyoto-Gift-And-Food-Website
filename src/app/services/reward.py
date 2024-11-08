@@ -65,3 +65,4 @@ def redeem_reward_points(db: Session, user_id: int, points: int):
     db.commit()
     db.refresh(reward)
     return {"success": True, "message": "Points redeemed successfully"}
+#end code

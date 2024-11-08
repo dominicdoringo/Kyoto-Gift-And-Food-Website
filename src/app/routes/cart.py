@@ -72,3 +72,4 @@ def get_cart_total(user_id: int, db: Session = Depends(get_db)):
 #def save_cart(request: cart_service.CartSaveRequest, db: Session = Depends(get_db)):
     # TODO: Implement save cart functionality
  #   raise HTTPException(status_code=501, detail="Not Implemented")
+#end code

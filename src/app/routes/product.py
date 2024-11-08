@@ -47,3 +47,4 @@ def update_product(product_id: int, product: ProductUpdate, db: Session = Depend
 def delete_product(product_id: int, db: Session = Depends(get_db)):
     result = product_service.delete_product(db=db, product_id=product_id)
     return result
+#end code

@@ -23,3 +23,4 @@ class User(Base):
     cart_items = relationship("CartItem", back_populates="user", cascade="all, delete-orphan")
     orders = relationship("Order", back_populates="user", cascade="all, delete-orphan")
     reward = relationship("Reward", back_populates="user", uselist=False)
+#end code

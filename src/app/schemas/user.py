@@ -1,3 +1,5 @@
+#src/app/schemas/user.py
+
 from datetime import datetime
 
 from pydantic import BaseModel, EmailStr
@@ -30,3 +32,4 @@ class UserResponse(BaseModel):
 
     class Config:
         from_attributes = True
+#end code

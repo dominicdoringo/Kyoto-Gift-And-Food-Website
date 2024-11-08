@@ -21,3 +21,4 @@ class Product(Base):
 
     # Relationship to CartItems
     cart_items = relationship("CartItem", back_populates="product", cascade="all, delete-orphan")
+#end code

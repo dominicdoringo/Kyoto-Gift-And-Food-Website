@@ -51,3 +51,4 @@ def delete_product(db: Session, product_id: int):
     db.delete(db_product)
     db.commit()
     return {"detail": "Product deleted successfully"}
+#end code

@@ -49,3 +49,4 @@ def read_user():
 @router.post("/verify-email/{verification_code}")
 def verify_email():
     pass
+#end code

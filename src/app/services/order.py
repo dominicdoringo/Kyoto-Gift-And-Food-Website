@@ -94,3 +94,4 @@ def get_order_status_history(db: Session, order_id: int):
         OrderStatusHistory(status=db_order.status, date=db_order.updated_at)
     ]
     return history
+#end code
