@@ -1,8 +1,7 @@
 #src/app/schemas/user.py
 
 from datetime import datetime
-
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, ConfigDict
 
 
 class UserBase(BaseModel):
@@ -29,6 +28,8 @@ class UserResponse(BaseModel):
     username: str
     email: EmailStr
     created_at: datetime
+
+    model_config = ConfigDict(from_attributes=True)
 
     class Config:
         from_attributes = True
