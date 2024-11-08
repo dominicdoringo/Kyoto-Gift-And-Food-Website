@@ -1,4 +1,4 @@
-# models/user.py
+# src/app/models/user.py
 from datetime import datetime, timezone
 
 from sqlalchemy import Boolean, Column, DateTime, Integer, String
@@ -25,4 +25,3 @@ class User(Base):
     )
     orders = relationship("Order", back_populates="user", cascade="all, delete-orphan")
     reward = relationship("Reward", back_populates="user", uselist=False)
-    tokens = relationship("Token", back_populates="user", cascade="all, delete-orphan")
