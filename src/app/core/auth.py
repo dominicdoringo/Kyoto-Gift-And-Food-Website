@@ -1,9 +1,16 @@
 #src/app/core/auth.py
 from datetime import UTC, datetime, timedelta
-
-import jwt
-from fastapi.security import OAuth2PasswordBearer
+from typing import Annotated
+from fastapi import APIRouter, Depends, HTTPException
+from pydantic import BaseModel
+from sqlalchemy.orm import Session
+from starlette import status
+from database import SessionLocal
+from app.models.user import User
 from passlib.context import CryptContext
+from jose import jwt, JWTError
+from fastapi.security import OAuth2PasswordBearer
+
 
 from app.core.config import get_settings
 
