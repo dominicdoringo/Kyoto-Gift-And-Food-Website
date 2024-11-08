@@ -1,5 +1,14 @@
-# schemas/__init__.py
-from .user import UserBase, UserCreate, User, UserResponse
+# src/app/schemas/__init__.py
+
+from .user import (
+    UserBase,
+    UserCreate,
+    UserUpdate,
+    UserResponse,
+    UserDetailResponse,
+    UserLogin,
+    UserProfile,
+)
 from .product import (
     ProductBase,
     ProductCreate,
@@ -58,8 +67,11 @@ __all__ = [
     # User schemas
     "UserBase",
     "UserCreate",
-    "User",
+    "UserUpdate",
     "UserResponse",
+    "UserDetailResponse",
+    "UserLogin",
+    "UserProfile",
     # Product schemas
     "ProductBase",
     "ProductCreate",
