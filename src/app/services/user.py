@@ -1,9 +1,8 @@
+#src/app/services/user.py
 import secrets
-
 from fastapi import HTTPException
 from passlib.hash import bcrypt
 from sqlalchemy.orm import Session
-
 from app.core.config import get_settings
 from app.core.security import verify_password
 from app.models.user import User

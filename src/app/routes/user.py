@@ -7,9 +7,10 @@ from sqlalchemy.orm import Session
 
 import app.services.user as user_service
 from app.core.auth import ACCESS_TOKEN_EXPIRE_MINUTES, create_access_token
-from app.dependencies import get_db
+from app.dependencies import get_db 
+from app.core.auth import get_current_user
 from app.schemas.token import Token
-from app.schemas.user import UserCreate, UserResponse
+from app.schemas.user import UserCreate, UserResponse, User
 
 router = APIRouter()
 
@@ -44,3 +45,10 @@ async def login_for_access_token(
         "token_type": "bearer",
         "expires_at": datetime.now(timezone.utc) + access_token_expires,
     }
+
+@router.get("/users", response_model=UserResponse, tags=["Users"])
+def read_current_user(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    """
+    Retrieve the currently authenticated user's username and email.
+    """
+    return current_user
