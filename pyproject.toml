@@ -32,6 +32,7 @@ dependencies = [
     "python-dotenv>=1.0.1",
     "sqlalchemy>=2.0.36",
     "sqlmodel>=0.0.22",
+    "pytz>=2023.3"
 ]
 
 [project.urls]

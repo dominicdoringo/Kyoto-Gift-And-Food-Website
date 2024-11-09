@@ -1,4 +1,5 @@
-from datetime import timedelta
+# routes/user.py (updated)
+from datetime import datetime, timedelta, timezone
 
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
@@ -19,8 +20,12 @@ def register_user(user: UserCreate, db: Session = Depends(get_db)):
 
 
 @router.post("/token", response_model=Token)
-async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
-    user = user_service.authenticate_user(db=db, username=form_data.username, password=form_data.password)
+async def login_for_access_token(
+    form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)
+):
+    user = user_service.authenticate_user(
+        db=db, username=form_data.username, password=form_data.password
+    )
 
     if not user:
         raise HTTPException(
@@ -29,24 +34,13 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-    # if not user.is_verified:
-    #     raise HTTPException(
-    #         status_code=400,
-    #         detail="Email not verified",
-    #     )
-
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    access_token = create_access_token(data={"sub": user.username}, expires_delta=access_token_expires)
+    access_token = create_access_token(
+        data={"sub": user.username}, expires_delta=access_token_expires
+    )
 
-    return {"access_token": access_token, "token_type": "bearer"}
-
-
-@router.get("/me")
-def read_user():
-    pass
-
-
-@router.post("/verify-email/{verification_code}")
-def verify_email():
-    pass
-#end code
+    return {
+        "access_token": access_token,
+        "token_type": "bearer",
+        "expires_at": datetime.now(timezone.utc) + access_token_expires,
+    }

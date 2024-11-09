@@ -14,7 +14,7 @@ class User(Base):
     username = Column(String, unique=True, index=True, nullable=False)
     email = Column(String, unique=True, index=True, nullable=False)
     password_hash = Column(String, nullable=False)
-    is_active = Column(Boolean, default=False)
+    is_active = Column(Boolean, default=True)
     is_verified = Column(Boolean, default=False)
     verification_code = Column(String, nullable=True)
     created_at = Column(DateTime, default=datetime.now(timezone.utc))
@@ -23,4 +23,4 @@ class User(Base):
     cart_items = relationship("CartItem", back_populates="user", cascade="all, delete-orphan")
     orders = relationship("Order", back_populates="user", cascade="all, delete-orphan")
     reward = relationship("Reward", back_populates="user", uselist=False)
-#end code
+    tokens = relationship("Token", back_populates="user", cascade="all, delete-orphan")

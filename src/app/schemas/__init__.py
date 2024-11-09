@@ -1,5 +1,7 @@
 # schemas/__init__.py
 from .user import UserBase, UserCreate, User, UserResponse
+
+from .token import Token, TokenData, TokenCreate
 from .product import (
     ProductBase,
     ProductCreate,
@@ -90,4 +92,7 @@ __all__ = [
     "RewardUpdateResponse",
     "RewardCancelResponse",
     "RewardRedeemResponse",
+    "Token",
+    "TokenData",
+    "TokenCreate",
 ]
