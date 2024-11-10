@@ -22,7 +22,7 @@ class UserSchema(UserBase):  # Renamed from 'User' to 'UserSchema'
     created_at: datetime
 
     class Config:
-        from_attributes = True
+        orm_mode = True  # Use 'orm_mode' instead of 'from_attributes'
 
 
 class UserResponse(BaseModel):
@@ -32,7 +32,7 @@ class UserResponse(BaseModel):
     created_at: datetime
 
     class Config:
-        from_attributes = True
+        orm_mode = True
 
 
 # **New Schemas**
@@ -45,7 +45,7 @@ class UserCreateResponse(BaseModel):
     created_at: datetime
 
     class Config:
-        from_attributes = True
+        orm_mode = True
 
 
 class ErrorResponse(BaseModel):
@@ -67,7 +67,7 @@ class UserUpdateResponse(BaseModel):
     created_at: datetime
 
     class Config:
-        from_attributes = True
+        orm_mode = True
 
 
 class PasswordChangeRequest(BaseModel):

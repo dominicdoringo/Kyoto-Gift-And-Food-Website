@@ -12,12 +12,13 @@ from app.services.user import get_user_by_username
 from app.schemas.token import TokenData
 from app.dependencies import get_db
 from app.models.user import User
-from passlib.context import CryptContext
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
+
 def verify_password(plain_password: str, hashed_password: str):
     return pwd_context.verify(plain_password, hashed_password)
+
 
 settings = get_settings()
 
@@ -25,17 +26,20 @@ SECRET_KEY = settings.SECRET_KEY
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
+# Update tokenUrl to match the actual endpoint
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/users/token")
 
 
 def get_password_hash(password: str):
     return pwd_context.hash(password)
 
+
 def create_access_token(data: dict, expires_delta: timedelta | None = None):
     to_encode = data.copy()
     expire = datetime.now(timezone.utc) + (expires_delta or timedelta(minutes=15))
     to_encode.update({"exp": expire})
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+
 
 async def get_current_user(
     db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)

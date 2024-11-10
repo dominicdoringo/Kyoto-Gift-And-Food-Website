@@ -20,7 +20,7 @@ from app.schemas.user import (
     PasswordChangeResponse,
     DeactivateResponse
 )
-from app.models.user import User  # SQLAlchemy User model
+from app.models.user import User  # Import SQLAlchemy User model
 
 router = APIRouter(prefix="/users", tags=["Users"])
 
@@ -95,7 +95,7 @@ def verify_email(verification_code: str, db: Session = Depends(get_db)):
     # ISSUE : DOES NOT WORK WITH MOBILE EMAIL CLICK LINK DOESNT WORK??? But works with desktop email.
     return {"message": "Email successfully verified."}
 
-# New Endpoints for /users/{id}
+# **New Endpoints for /users/{id}**
 
 @router.get("/{id}", response_model=UserResponse)
 def get_user_details(
@@ -142,3 +142,30 @@ def delete_user_account(
     """
     user_service.delete_user(db=db, user_id=id, current_user=current_user)
     return
+
+@router.put("/{id}/password", response_model=PasswordChangeResponse)
+def change_user_password(
+    id: int, 
+    password_change: PasswordChangeRequest, 
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """
+    Change user password.
+    Users can only change their own password.
+    """
+    result = user_service.change_password(db=db, user_id=id, password_change=password_change, current_user=current_user)
+    return result
+
+@router.put("/{id}/deactivate", response_model=DeactivateResponse)
+def deactivate_user_account(
+    id: int, 
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """
+    Deactivate a user account.
+    Users can only deactivate their own account.
+    """
+    result = user_service.deactivate_user(db=db, user_id=id, current_user=current_user)
+    return result

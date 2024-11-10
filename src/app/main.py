@@ -4,9 +4,10 @@ from fastapi import FastAPI, Request
 import logging
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.database import Base, engine
-from app.routes import api_router
+from app.routes.user import router as user_router
 from app.core.middleware import AdvancedMiddleware  # Correct import path
 
+# Create all tables
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
@@ -28,7 +29,7 @@ app.add_middleware(
 )
 
 # Include API router
-app.include_router(api_router)
+app.include_router(user_router)
 
 # Existing Logging Middleware
 @app.middleware("http")
