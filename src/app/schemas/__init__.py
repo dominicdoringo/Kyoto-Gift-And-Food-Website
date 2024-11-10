@@ -1,5 +1,15 @@
 # schemas/__init__.py
-from .user import UserBase, UserCreate, UserSchema, UserResponse
+from .user import (
+    UserBase,
+    UserCreate,
+    UserSchema,
+    UserResponse,
+    UserCreateResponse,
+    UserUpdate,
+    UserUpdateResponse,
+    ErrorResponse,
+    DeactivateResponse
+)
 
 from .token import Token, TokenData, TokenCreate
 from .product import (
@@ -54,6 +64,11 @@ __all__ = [
     "UserCreate",
     "UserSchema",
     "UserResponse",
+    "UserCreateResponse",
+    "UserUpdate",
+    "UserUpdateResponse",
+    "ErrorResponse",
+    "DeactivateResponse",
     "ProductBase",
     "ProductCreate",
     "ProductUpdate",

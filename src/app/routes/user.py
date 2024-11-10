@@ -9,10 +9,116 @@ import app.services.user as user_service
 from app.core.auth import ACCESS_TOKEN_EXPIRE_MINUTES, create_access_token, get_current_user
 from app.dependencies import get_db 
 from app.schemas.token import Token
-from app.schemas.user import UserCreate, UserResponse, UserSchema  # Updated import
-from app.models.user import User  # Import SQLAlchemy User model
+from app.schemas.user import (
+    UserCreate, 
+    UserResponse, 
+    UserSchema,
+    UserCreateResponse,
+    UserUpdate,
+    UserUpdateResponse,
+    ErrorResponse,
+    PasswordChangeRequest,
+    PasswordChangeResponse,
+    DeactivateResponse
+)
+from app.models.user import User  # SQLAlchemy User model
 
-router = APIRouter()
+router = APIRouter(prefix="/api/users", tags=["Users"])
+
+@router.post("/", response_model=UserCreateResponse, status_code=201)
+def create_user(user: UserCreate, db: Session = Depends(get_db)):
+    """
+    Register a new user.
+    """
+    db_user = user_service.create_user(db=db, user=user)
+    return db_user
+
+@router.get("/", response_model=list[UserResponse])
+def list_all_users(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """
+    Retrieve a list of all users.
+    Restricted to admin users.
+    """
+    users = user_service.list_users(db=db, current_user=current_user)
+    return users
+
+@router.get("/{id}", response_model=UserResponse)
+def get_user_details(
+    id: int, 
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """
+    Retrieve user details by ID.
+    Users can only retrieve their own details.
+    """
+    user = user_service.get_user_by_id(db=db, user_id=id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    if user.id != current_user.id:
+        raise HTTPException(status_code=403, detail="Not authorized to view this user")
+    
+    return user
+
+@router.put("/{id}", response_model=UserUpdateResponse)
+def update_user_info(
+    id: int, 
+    user_update: UserUpdate, 
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """
+    Update user information.
+    Users can only update their own information.
+    """
+    updated_user = user_service.update_user(db=db, user_id=id, user_update=user_update, current_user=current_user)
+    return updated_user
+
+@router.delete("/{id}", status_code=204)
+def delete_user_account(
+    id: int, 
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """
+    Delete a user account.
+    Users can only delete their own account.
+    """
+    user_service.delete_user(db=db, user_id=id, current_user=current_user)
+    return
+
+@router.put("/{id}/password", response_model=PasswordChangeResponse)
+def change_user_password(
+    id: int, 
+    password_change: PasswordChangeRequest, 
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """
+    Change user password.
+    Users can only change their own password.
+    """
+    result = user_service.change_password(db=db, user_id=id, password_change=password_change, current_user=current_user)
+    return result
+
+@router.put("/{id}/deactivate", response_model=DeactivateResponse)
+def deactivate_user_account(
+    id: int, 
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """
+    Deactivate a user account.
+    Users can only deactivate their own account.
+    """
+    result = user_service.deactivate_user(db=db, user_id=id, current_user=current_user)
+    return result
+
+# Existing endpoints
 
 @router.post("/register", response_model=UserResponse, tags=["Users"])
 def register_user(user: UserCreate, db: Session = Depends(get_db)):
@@ -50,7 +156,7 @@ async def login_for_access_token(
         "expires_at": datetime.now(timezone.utc) + access_token_expires,
     }
 
-@router.get("/users", response_model=UserResponse, tags=["Users"])
+@router.get("/", response_model=UserResponse, tags=["Users"])
 def read_current_user(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     """
     Retrieve the currently authenticated user's details.
@@ -79,5 +185,5 @@ def verify_email(verification_code: str, db: Session = Depends(get_db)):
     user.verification_code = None  # Optionally, remove the verification code after verification
     db.commit()
     db.refresh(user)
-    #ISSUE : DOES NOT WORK WITH MOBILE EMAIL CLICK LINK DOESNT WORK??? But works with desktop email. 
+    # ISSUE : DOES NOT WORK WITH MOBILE EMAIL CLICK LINK DOESNT WORK??? But works with desktop email.
     return {"message": "Email successfully verified."}
