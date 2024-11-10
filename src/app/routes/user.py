@@ -79,5 +79,5 @@ def verify_email(verification_code: str, db: Session = Depends(get_db)):
     user.verification_code = None  # Optionally, remove the verification code after verification
     db.commit()
     db.refresh(user)
-    
+    #ISSUE : DOES NOT WORK WITH MOBILE EMAIL CLICK LINK DOESNT WORK??? But works with desktop email. 
     return {"message": "Email successfully verified."}
