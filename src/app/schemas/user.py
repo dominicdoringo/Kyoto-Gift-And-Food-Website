@@ -1,7 +1,6 @@
-#src/app/schemas/user.py
+# src/app/schemas/user.py
 
 from datetime import datetime
-
 from pydantic import BaseModel, EmailStr
 
 
@@ -14,7 +13,7 @@ class UserCreate(UserBase):
     password: str
 
 
-class User(UserBase):
+class UserSchema(UserBase):  # Renamed from 'User' to 'UserSchema'
     id: int
     is_active: bool
     is_verified: bool
@@ -32,4 +31,3 @@ class UserResponse(BaseModel):
 
     class Config:
         from_attributes = True
-#end code
