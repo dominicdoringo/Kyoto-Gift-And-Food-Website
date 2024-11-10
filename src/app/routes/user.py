@@ -1,7 +1,6 @@
 # src/app/routes/user.py
 
 from datetime import datetime, timedelta, timezone
-
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
@@ -10,7 +9,8 @@ import app.services.user as user_service
 from app.core.auth import ACCESS_TOKEN_EXPIRE_MINUTES, create_access_token, get_current_user
 from app.dependencies import get_db 
 from app.schemas.token import Token
-from app.schemas.user import UserCreate, UserResponse, User
+from app.schemas.user import UserCreate, UserResponse, UserSchema  # Updated import
+from app.models.user import User  # Import SQLAlchemy User model
 
 router = APIRouter()
 

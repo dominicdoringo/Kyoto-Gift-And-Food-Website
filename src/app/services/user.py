@@ -6,7 +6,7 @@ from passlib.hash import bcrypt
 from sqlalchemy.orm import Session
 from app.core.config import get_settings
 from app.core.security import verify_password
-from app.models.user import User
+from app.models.user import User  # SQLAlchemy model
 from app.schemas.user import UserCreate
 from app.services.email import send_verification_email  # Import the email service
 
