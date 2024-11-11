@@ -1,5 +1,4 @@
-# src/app/services/user.py
-
+# src/app/services/user.py (updated)
 import secrets
 from fastapi import HTTPException
 from passlib.hash import bcrypt
@@ -73,10 +72,8 @@ def authenticate_user(db: Session, username: str, password: str):
 def list_users(db: Session, current_user: User):
     """
     Retrieve a list of all users.
-    For security, you might want to restrict this to admin users.
-    Currently, it allows any authenticated user to view all users.
+    Restricted to admin users only.
     """
-    # OPTIONAL: Restrict to admin users
     if not current_user.is_admin:
         raise HTTPException(status_code=403, detail="Not authorized to view all users")
     users = db.query(User).all()
@@ -171,3 +168,28 @@ def deactivate_user(db: Session, user_id: int, current_user: User):
     db.commit()
     db.refresh(user)
     return {"message": "User account deactivated successfully"}
+
+def update_user_admin(db: Session, user_id: int, user_update: UserUpdate):
+    """
+    Admin: Update any user's information.
+    """
+    user = get_user_by_id(db, user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    if user_update.username:
+        if user_update.username != user.username and get_user_by_username(db, user_update.username):
+            raise HTTPException(status_code=400, detail="Username already taken")
+        user.username = user_update.username
+
+    if user_update.email:
+        if user_update.email != user.email and get_user_by_email(db, user_update.email):
+            raise HTTPException(status_code=400, detail="Email already taken")
+        user.email = user_update.email
+
+    if user_update.is_active is not None:
+        user.is_active = user_update.is_active
+
+    db.commit()
+    db.refresh(user)
+    return user

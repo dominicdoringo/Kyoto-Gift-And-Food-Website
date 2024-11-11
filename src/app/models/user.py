@@ -16,6 +16,7 @@ class User(Base):
     password_hash = Column(String, nullable=False)
     is_active = Column(Boolean, default=True)
     is_verified = Column(Boolean, default=False)
+    is_admin = Column(Boolean, default=False)  # New admin flag
     verification_code = Column(String, nullable=True)
     created_at = Column(DateTime, default=datetime.now(timezone.utc))
 
