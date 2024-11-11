@@ -13,7 +13,7 @@ from app.schemas.user import (
 )
 from app.models.user import User
 
-router = APIRouter(prefix="/admin", tags=["Admin"])
+router = APIRouter()
 
 
 def get_admin_user(current_user: User = Depends(get_current_user)) -> User:
@@ -75,5 +75,5 @@ def delete_user_account_admin(
     """
     Admin: Delete any user account.
     """
-    user_service.delete_user(db=db, user_id=user_id, current_user=admin_user)
+    user_service.delete_user_admin(db=db, user_id=user_id)
     return

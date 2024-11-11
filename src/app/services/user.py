@@ -1,4 +1,5 @@
-# src/app/services/user.py (updated)
+# src/app/services/user.py
+
 import secrets
 from fastapi import HTTPException
 from passlib.hash import bcrypt
@@ -93,7 +94,7 @@ def update_user(db: Session, user_id: int, user_update: UserUpdate, current_user
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
 
-    if user.id != current_user.id:
+    if user.id != current_user.id and not current_user.is_admin:
         raise HTTPException(status_code=403, detail="Not authorized to update this user")
 
     if user_update.username:
@@ -123,7 +124,7 @@ def delete_user(db: Session, user_id: int, current_user: User):
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
 
-    if user.id != current_user.id:
+    if user.id != current_user.id and not current_user.is_admin:
         raise HTTPException(status_code=403, detail="Not authorized to delete this user")
 
     db.delete(user)
@@ -140,7 +141,7 @@ def change_password(db: Session, user_id: int, password_change: PasswordChangeRe
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
 
-    if user.id != current_user.id:
+    if user.id != current_user.id and not current_user.is_admin:
         raise HTTPException(status_code=403, detail="Not authorized to change password for this user")
 
     if not verify_password(password_change.old_password, user.password_hash):
@@ -161,7 +162,7 @@ def deactivate_user(db: Session, user_id: int, current_user: User):
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
 
-    if user.id != current_user.id:
+    if user.id != current_user.id and not current_user.is_admin:
         raise HTTPException(status_code=403, detail="Not authorized to deactivate this user")
 
     user.is_active = False
@@ -169,27 +170,15 @@ def deactivate_user(db: Session, user_id: int, current_user: User):
     db.refresh(user)
     return {"message": "User account deactivated successfully"}
 
-def update_user_admin(db: Session, user_id: int, user_update: UserUpdate):
+
+def delete_user_admin(db: Session, user_id: int):
     """
-    Admin: Update any user's information.
+    Admin: Delete any user account without ownership checks.
     """
     user = get_user_by_id(db, user_id)
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
 
-    if user_update.username:
-        if user_update.username != user.username and get_user_by_username(db, user_update.username):
-            raise HTTPException(status_code=400, detail="Username already taken")
-        user.username = user_update.username
-
-    if user_update.email:
-        if user_update.email != user.email and get_user_by_email(db, user_update.email):
-            raise HTTPException(status_code=400, detail="Email already taken")
-        user.email = user_update.email
-
-    if user_update.is_active is not None:
-        user.is_active = user_update.is_active
-
+    db.delete(user)
     db.commit()
-    db.refresh(user)
-    return user
+    return {"detail": "User deleted successfully"}

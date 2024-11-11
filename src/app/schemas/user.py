@@ -1,4 +1,5 @@
-# src/app/schemas/user.py (updated)
+# src/app/schemas/user.py
+
 from datetime import datetime
 from typing import Optional
 
@@ -18,7 +19,7 @@ class UserSchema(UserBase):  # Renamed from 'User' to 'UserSchema'
     id: int
     is_active: bool
     is_verified: bool
-    is_admin: bool  # Include admin flag
+    # Removed is_admin to prevent exposure
     created_at: datetime
 
     class Config:
@@ -29,7 +30,7 @@ class UserResponse(BaseModel):
     id: int
     username: str
     email: EmailStr
-    is_admin: bool  # Include admin flag
+    # Removed is_admin from this schema
     created_at: datetime
 
     class Config:
@@ -43,7 +44,6 @@ class UserCreateResponse(BaseModel):
     username: str
     email: EmailStr
     is_verified: bool
-    is_admin: bool  # Include admin flag
     created_at: datetime
 
     class Config:
@@ -66,7 +66,6 @@ class UserUpdateResponse(BaseModel):
     email: EmailStr
     is_verified: bool
     is_active: bool
-    is_admin: bool  # Include admin flag
     created_at: datetime
 
     class Config:
@@ -84,3 +83,9 @@ class PasswordChangeResponse(BaseModel):
 
 class DeactivateResponse(BaseModel):
     message: str
+
+class AdminUserResponse(UserResponse):
+    is_admin: bool
+
+    class Config:
+        orm_mode = True
