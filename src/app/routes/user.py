@@ -22,7 +22,8 @@ from app.schemas.user import (
 )
 from app.models.user import User  # Import SQLAlchemy User model
 
-router = APIRouter(prefix="/users", tags=["Users"])
+# Instantiate APIRouter without prefix
+router = APIRouter()
 
 @router.post("/register", response_model=UserCreateResponse, status_code=201)
 def register_user(user: UserCreate, db: Session = Depends(get_db)):

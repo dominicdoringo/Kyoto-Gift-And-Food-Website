@@ -1,4 +1,5 @@
-# routes/__init__.py
+# src/app/routes/__init__.py
+
 from fastapi import APIRouter
 
 from app.routes import category, user, product, cart, order, reward

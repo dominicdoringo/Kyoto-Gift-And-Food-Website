@@ -4,8 +4,8 @@ from fastapi import FastAPI, Request
 import logging
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.database import Base, engine
-from app.routes.user import router as user_router
-from app.core.middleware import AdvancedMiddleware  # Correct import path
+from app.routes import api_router  # Import the aggregated api_router
+from app.core.middleware import AdvancedMiddleware  # Ensure correct import path
 
 # Create all tables
 Base.metadata.create_all(bind=engine)
@@ -15,7 +15,7 @@ app = FastAPI()
 # Configure CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Adjust for production
+    allow_origins=["*"],  # Adjust this for production environments
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -28,8 +28,8 @@ app.add_middleware(
     window_seconds=60       # Per 60 seconds
 )
 
-# Include API router
-app.include_router(user_router)
+# Include the aggregated API router
+app.include_router(api_router)
 
 # Existing Logging Middleware
 @app.middleware("http")
