@@ -8,6 +8,7 @@ from app.core.database import Base
 from app.dependencies import get_db
 from app.main import app
 
+# Use the test database file
 SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
 
 engine = create_engine(
@@ -33,7 +34,7 @@ def client():
     with TestClient(app) as c:
         yield c
 
-# New fixture for the database session
+# Fixture for the database session
 @pytest.fixture(scope="module")
 def db():
     db = TestingSessionLocal()
