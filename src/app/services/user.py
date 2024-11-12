@@ -182,3 +182,28 @@ def delete_user_admin(db: Session, user_id: int):
     db.delete(user)
     db.commit()
     return {"detail": "User deleted successfully"}
+
+def update_user_admin(db: Session, user_id: int, user_update: UserUpdate):
+    """
+    Admin: Update any user's information without ownership checks.
+    """
+    user = get_user_by_id(db, user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    if user_update.username:
+        if user_update.username != user.username and get_user_by_username(db, user_update.username):
+            raise HTTPException(status_code=400, detail="Username already taken")
+        user.username = user_update.username
+
+    if user_update.email:
+        if user_update.email != user.email and get_user_by_email(db, user_update.email):
+            raise HTTPException(status_code=400, detail="Email already taken")
+        user.email = user_update.email
+
+    if user_update.is_active is not None:
+        user.is_active = user_update.is_active
+
+    db.commit()
+    db.refresh(user)
+    return user
