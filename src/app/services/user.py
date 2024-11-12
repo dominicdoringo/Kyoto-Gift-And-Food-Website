@@ -153,24 +153,6 @@ def change_password(db: Session, user_id: int, password_change: PasswordChangeRe
     return {"message": "Password updated successfully"}
 
 
-def deactivate_user(db: Session, user_id: int, current_user: User):
-    """
-    Deactivate a user's account.
-    Users can only deactivate their own account.
-    """
-    user = get_user_by_id(db, user_id)
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-
-    if user.id != current_user.id and not current_user.is_admin:
-        raise HTTPException(status_code=403, detail="Not authorized to deactivate this user")
-
-    user.is_active = False
-    db.commit()
-    db.refresh(user)
-    return {"message": "User account deactivated successfully"}
-
-
 def delete_user_admin(db: Session, user_id: int):
     """
     Admin: Delete any user account without ownership checks.

@@ -156,15 +156,3 @@ def change_user_password(
     result = user_service.change_password(db=db, user_id=id, password_change=password_change, current_user=current_user)
     return result
 
-@router.put("/{id}/deactivate", response_model=DeactivateResponse)
-def deactivate_user_account(
-    id: int, 
-    db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
-):
-    """
-    Deactivate a user account.
-    Users can only deactivate their own account.
-    """
-    result = user_service.deactivate_user(db=db, user_id=id, current_user=current_user)
-    return result
