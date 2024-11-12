@@ -5,13 +5,13 @@ build-backend = "hatchling.build"
 [project]
 name = "app"
 dynamic = ["version"]
-description = 'A budget tracker application api'
+description = 'Store App'
 readme = "README.md"
 requires-python = ">=3.12"
 license = "MIT"
 keywords = []
 authors = [
-  { name = "Ugur Emre Dogan", email = "ue.dogan@gmail.com" },
+  { name = "Dominic Doringo", email = "Dominicdoringo619@gmail.com" },
 ]
 classifiers = [
   "Development Status :: 4 - Beta",
@@ -36,9 +36,9 @@ dependencies = [
 ]
 
 [project.urls]
-Documentation = "https://github.com/Ugur Emre Dogan/app#readme"
-Issues = "https://github.com/Ugur Emre Dogan/app/issues"
-Source = "https://github.com/Ugur Emre Dogan/app"
+Documentation = "https://github.com/dominicdoringo Dominic Doringo/app#readme"
+Issues = "https://github.com/dominicdoringo "
+Source = "https://github.com/dominicdoringo "
 
 [tool.hatch.version]
 path = "src/app/__about__.py"

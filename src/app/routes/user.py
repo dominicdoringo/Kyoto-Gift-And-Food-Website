@@ -19,9 +19,8 @@ from app.schemas.user import (
     PasswordChangeResponse,
     DeactivateResponse
 )
-from app.models.user import User  # Import SQLAlchemy User model
+from app.models.user import User 
 
-# Instantiate APIRouter without prefix
 router = APIRouter()
 
 @router.post("/register", response_model=UserCreateResponse, status_code=201)
