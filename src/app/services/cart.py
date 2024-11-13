@@ -6,7 +6,6 @@ from app.models.cart import CartItem
 from app.models.product import Product
 from app.schemas.cart import CartItemCreate, CartItemUpdate, CartRemoveResponse, CartClearResponse, CartTotalResponse
 
-
 def get_cart_items(db: Session, user_id: int):
     cart_items = (
         db.query(CartItem)
@@ -16,8 +15,10 @@ def get_cart_items(db: Session, user_id: int):
     )
     return cart_items
 
-
 def add_cart_item(db: Session, item: CartItemCreate):
+    if item.quantity <= 0:
+        raise HTTPException(status_code=422, detail="Quantity must be greater than zero")
+
     product = db.query(Product).filter(Product.id == item.product_id).first()
     if not product:
         raise HTTPException(status_code=404, detail="Product not found")
@@ -44,8 +45,10 @@ def add_cart_item(db: Session, item: CartItemCreate):
     db.refresh(cart_item)
     return cart_item
 
-
 def update_cart_item(db: Session, user_id: int, product_id: int, item: CartItemUpdate):
+    if item.quantity <= 0:
+        raise HTTPException(status_code=422, detail="Quantity must be greater than zero")
+
     cart_item = db.query(CartItem).filter(
         CartItem.user_id == user_id,
         CartItem.product_id == product_id
@@ -70,7 +73,6 @@ def update_cart_item(db: Session, user_id: int, product_id: int, item: CartItemU
     db.refresh(cart_item)
     return cart_item
 
-
 def remove_cart_item(db: Session, user_id: int, product_id: int):
     cart_item = db.query(CartItem).filter(
         CartItem.user_id == user_id,
@@ -88,7 +90,6 @@ def remove_cart_item(db: Session, user_id: int, product_id: int):
     db.commit()
     return CartRemoveResponse(success=True, message="Item removed from cart successfully")
 
-
 def clear_cart(db: Session, user_id: int):
     cart_items = db.query(CartItem).filter(CartItem.user_id == user_id).all()
     for item in cart_items:
@@ -98,7 +99,6 @@ def clear_cart(db: Session, user_id: int):
         db.delete(item)
     db.commit()
     return CartClearResponse(success=True, message="Cart cleared successfully")
-
 
 def get_cart_total(db: Session, user_id: int):
     cart_items = (
@@ -110,4 +110,3 @@ def get_cart_total(db: Session, user_id: int):
     total = sum(item.product.price * item.quantity for item in cart_items if item.product)
     item_count = sum(item.quantity for item in cart_items)
     return CartTotalResponse(total=total, item_count=item_count)
-#end code
