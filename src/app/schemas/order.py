@@ -8,6 +8,8 @@ class OrderItemBase(BaseModel):
     product_id: int
     quantity: int
     price: float
+    subtotal: float  # Added field
+    tax: float       # Added field
 
 
 class OrderItem(OrderItemBase):
@@ -15,6 +17,7 @@ class OrderItem(OrderItemBase):
 
     class Config:
         orm_mode = True
+
 
 
 class OrderBase(BaseModel):

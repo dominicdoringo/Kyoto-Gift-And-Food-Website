@@ -17,6 +17,8 @@ class Order(Base):
     total = Column(Float, nullable=False)
     created_at = Column(DateTime, default=datetime.now(timezone.utc))
     updated_at = Column(DateTime, default=datetime.now(timezone.utc), onupdate=datetime.now(timezone.utc))
+    subtotal = Column(Float)  # New field for subtotal
+    tax = Column(Float)       # New field for tax
 
     user = relationship("User", back_populates="orders")
     items = relationship("OrderItem", back_populates="order", cascade="all, delete-orphan")
@@ -30,6 +32,9 @@ class OrderItem(Base):
     product_id = Column(Integer, ForeignKey("products.id"), nullable=False)
     quantity = Column(Integer, nullable=False, default=1)
     price = Column(Float, nullable=False)
+    subtotal = Column(Float)  # New field for subtotal
+    tax = Column(Float)       # New field for tax
+
 
     order = relationship("Order", back_populates="items")
     product = relationship("Product")

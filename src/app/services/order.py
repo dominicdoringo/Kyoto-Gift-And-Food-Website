@@ -11,13 +11,14 @@ from app.schemas.order import (
 from app.services.cart import get_cart_items, clear_cart  # Import cart services
 
 
-def create_order(db: Session, user_id: int, order: OrderCreate):
+def create_order(db: Session, user_id: int, order: OrderCreate, tax_rate: float = 0.08):
     # Fetch cart items for the current user
     cart_items = get_cart_items(db, user_id)
     if not cart_items:
         raise HTTPException(status_code=400, detail="Cart is empty")
 
-    total = 0.0
+    subtotal = 0.0
+    total_tax = 0.0
     order_items = []
 
     for cart_item in cart_items:
@@ -30,18 +31,33 @@ def create_order(db: Session, user_id: int, order: OrderCreate):
                 detail=f"Insufficient stock for product {product.name}"
             )
         product.stock -= cart_item.quantity
-        item_total = product.price * cart_item.quantity
-        total += item_total
+
+        # Calculate per-item subtotal and tax
+        item_subtotal = product.price * cart_item.quantity
+        item_tax = round(item_subtotal * tax_rate, 2)
+        item_total = round(item_subtotal + item_tax, 2)
+
+        subtotal += item_subtotal
+        total_tax += item_tax
+
         order_item = OrderItem(
             product_id=cart_item.product_id,
             quantity=cart_item.quantity,
-            price=product.price
+            price=product.price,
+            subtotal=item_subtotal,
+            tax=item_tax
         )
         order_items.append(order_item)
+
+    # Calculate grand total
+    total = round(subtotal + total_tax, 2)
 
     db_order = Order(
         user_id=user_id,
         payment_method=order.payment_method,
+        status="pending",
+        subtotal=subtotal,
+        tax=total_tax,
         total=total,
         items=order_items
     )
@@ -53,6 +69,8 @@ def create_order(db: Session, user_id: int, order: OrderCreate):
     clear_cart(db, user_id)
 
     return db_order
+
+
 
 
 def get_order(db: Session, user_id: int, order_id: int):
