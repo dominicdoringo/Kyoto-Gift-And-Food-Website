@@ -1,7 +1,7 @@
 # models/order.py
 from datetime import datetime, timezone
 
-from sqlalchemy import Column, DateTime, Float, ForeignKey, Integer, String
+from sqlalchemy import Column, DateTime, Float, ForeignKey, Integer, String, Numeric
 from sqlalchemy.orm import relationship
 
 from app.core.database import Base
@@ -17,8 +17,8 @@ class Order(Base):
     total = Column(Float, nullable=False)
     created_at = Column(DateTime, default=datetime.now(timezone.utc))
     updated_at = Column(DateTime, default=datetime.now(timezone.utc), onupdate=datetime.now(timezone.utc))
-    subtotal = Column(Float)  # New field for subtotal
-    tax = Column(Float)       # New field for tax
+    subtotal = Column(Numeric(10, 2), nullable=False)  # Adjust precision and scale as needed
+    tax = Column(Numeric(10, 2), nullable=False)
 
     user = relationship("User", back_populates="orders")
     items = relationship("OrderItem", back_populates="order", cascade="all, delete-orphan")
@@ -32,8 +32,8 @@ class OrderItem(Base):
     product_id = Column(Integer, ForeignKey("products.id"), nullable=False)
     quantity = Column(Integer, nullable=False, default=1)
     price = Column(Float, nullable=False)
-    subtotal = Column(Float)  # New field for subtotal
-    tax = Column(Float)       # New field for tax
+    subtotal = Column(Numeric(10, 2), nullable=False)  # Adjust precision and scale as needed
+    tax = Column(Numeric(10, 2), nullable=False)
 
 
     order = relationship("Order", back_populates="items")
