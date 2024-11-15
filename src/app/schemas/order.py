@@ -1,4 +1,3 @@
-# schemas/order.py
 from datetime import datetime
 from typing import List, Optional
 
@@ -9,10 +8,6 @@ class OrderItemBase(BaseModel):
     product_id: int
     quantity: int
     price: float
-
-
-class OrderItemCreate(OrderItemBase):
-    pass
 
 
 class OrderItem(OrderItemBase):
@@ -27,8 +22,8 @@ class OrderBase(BaseModel):
 
 
 class OrderCreate(OrderBase):
-    user_id: int
-    cart_items: List[OrderItemCreate]
+    # Removed cart_items since we fetch them from the database
+    pass
 
 
 class OrderUpdate(BaseModel):

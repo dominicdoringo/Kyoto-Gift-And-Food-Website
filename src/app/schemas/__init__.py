@@ -37,7 +37,6 @@ from .cart import (
 )
 from .order import (
     OrderItemBase,
-    OrderItemCreate,
     OrderItem,
     OrderBase,
     OrderCreate,
@@ -89,7 +88,6 @@ __all__ = [
     "CartSaveResponse",
     "ProductInCart",
     "OrderItemBase",
-    "OrderItemCreate",
     "OrderItem",
     "OrderBase",
     "OrderCreate",
