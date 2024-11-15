@@ -1,10 +1,17 @@
-# services/cart.py
 from sqlalchemy.orm import Session, joinedload
 from fastapi import HTTPException
 
 from app.models.cart import CartItem
 from app.models.product import Product
-from app.schemas.cart import CartItemCreate, CartItemUpdate, CartRemoveResponse, CartClearResponse, CartTotalResponse, CartDiscountResponse, CartItemDetail
+from app.schemas.cart import (
+    CartItemCreate,
+    CartItemUpdate,
+    CartRemoveResponse,
+    CartClearResponse,
+    CartTotalResponse,
+    CartDiscountResponse,
+    CartItemDetail,
+)
 
 def get_cart_items(db: Session, user_id: int):
     cart_items = (
@@ -15,7 +22,7 @@ def get_cart_items(db: Session, user_id: int):
     )
     return cart_items
 
-def add_cart_item(db: Session, item: CartItemCreate):
+def add_cart_item(db: Session, user_id: int, item: CartItemCreate):
     if item.quantity <= 0:
         raise HTTPException(status_code=422, detail="Quantity must be greater than zero")
 
@@ -26,7 +33,7 @@ def add_cart_item(db: Session, item: CartItemCreate):
         raise HTTPException(status_code=400, detail="Insufficient stock")
 
     cart_item = db.query(CartItem).filter(
-        CartItem.user_id == item.user_id,
+        CartItem.user_id == user_id,
         CartItem.product_id == item.product_id
     ).first()
 
@@ -34,7 +41,7 @@ def add_cart_item(db: Session, item: CartItemCreate):
         cart_item.quantity += item.quantity
     else:
         cart_item = CartItem(
-            user_id=item.user_id,
+            user_id=user_id,
             product_id=item.product_id,
             quantity=item.quantity
         )
@@ -100,7 +107,6 @@ def clear_cart(db: Session, user_id: int):
     db.commit()
     return CartClearResponse(success=True, message="Cart cleared successfully")
 
-
 def get_cart_total(db: Session, user_id: int, tax_rate: float = 0.08):
     cart_items = (
         db.query(CartItem)
@@ -139,14 +145,14 @@ def get_cart_total(db: Session, user_id: int, tax_rate: float = 0.08):
         grand_total=grand_total
     )
 
-
 def apply_discount(db: Session, user_id: int, discount_code: str):
-    
     cart_total = get_cart_total(db, user_id)
+    
     # For simplicity, let's assume a flat 10% discount for a valid code 'SAVE10'
     if discount_code == 'SAVE10':
-        discount = cart_total.total * 0.10
-        new_total = cart_total.total - discount
+        discount = round(cart_total.total * 0.10, 2)  # 10% discount rounded to 2 decimal places
+        new_total = round(cart_total.total - discount, 2)  # New total rounded to 2 decimal places
+        
         return CartDiscountResponse(
             success=True,
             total=cart_total.total,
@@ -156,3 +162,4 @@ def apply_discount(db: Session, user_id: int, discount_code: str):
         )
     else:
         raise HTTPException(status_code=400, detail="Invalid discount code")
+

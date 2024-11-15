@@ -1,4 +1,3 @@
-# schemas/cart.py
 from datetime import datetime
 from typing import List, Optional
 
@@ -13,7 +12,7 @@ class CartItemBase(BaseModel):
 
 class CartItemCreate(CartItemBase):
     product_id: int
-    user_id: int
+    # Removed user_id
 
 
 class CartItemUpdate(BaseModel):
@@ -29,14 +28,13 @@ class ProductInCart(ProductBase):
 
 class CartItem(CartItemBase):
     id: int
-    user_id: int
     product: ProductInCart
     created_at: datetime
 
     class Config:
         orm_mode = True
 
- 
+
 class CartItemDetail(BaseModel):
     product_id: int
     product_name: str
@@ -45,7 +43,7 @@ class CartItemDetail(BaseModel):
     subtotal: float
 
     class Config:
-        orm_mode = True       
+        orm_mode = True
 
 
 class CartAddResponse(BaseModel):
@@ -80,16 +78,6 @@ class CartClearResponse(BaseModel):
         orm_mode = True
 
 
-class CartItemDetail(BaseModel):
-    product_id: int
-    product_name: str
-    quantity: int
-    price: float
-    subtotal: float
-
-    class Config:
-        orm_mode = True
-
 class CartTotalResponse(BaseModel):
     total: float
     item_count: int
@@ -102,8 +90,9 @@ class CartTotalResponse(BaseModel):
 
 
 class CartDiscountRequest(BaseModel):
-    user_id: int
     discount_code: str
+    # Removed user_id
+
 
 class CartDiscountResponse(BaseModel):
     success: bool
@@ -112,8 +101,13 @@ class CartDiscountResponse(BaseModel):
     new_total: float
     message: Optional[str] = None
 
+    class Config:
+        orm_mode = True
+
+
 class CartSaveRequest(BaseModel):
-    user_id: int
+    # Removed user_id
+    pass
 
 
 class CartSaveResponse(BaseModel):
@@ -122,4 +116,3 @@ class CartSaveResponse(BaseModel):
 
     class Config:
         orm_mode = True
-#end code
