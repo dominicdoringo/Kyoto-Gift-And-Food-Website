@@ -6,7 +6,7 @@ from pydantic import BaseModel
 class Token(BaseModel):
     access_token: str
     token_type: str
-    expires_at: datetime  # Include if you want to return expiry info
+    expires_at: datetime  
 
     class Config:
         orm_mode = True
