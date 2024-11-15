@@ -69,9 +69,20 @@ class CartClearResponse(BaseModel):
         orm_mode = True
 
 
+class CartItemDetail(BaseModel):
+    product_id: int
+    product_name: str
+    quantity: int
+    price: float
+    subtotal: float
+
+    class Config:
+        orm_mode = True
+
 class CartTotalResponse(BaseModel):
     total: float
     item_count: int
+    items: List[CartItemDetail]
 
     class Config:
         orm_mode = True
@@ -81,15 +92,12 @@ class CartDiscountRequest(BaseModel):
     user_id: int
     discount_code: str
 
-
 class CartDiscountResponse(BaseModel):
     success: bool
+    total: float
+    discount_applied: float
     new_total: float
-    discount_applied: str
-
-    class Config:
-        orm_mode = True
-
+    message: Optional[str] = None
 
 class CartSaveRequest(BaseModel):
     user_id: int

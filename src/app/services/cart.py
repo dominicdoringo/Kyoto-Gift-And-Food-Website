@@ -4,7 +4,7 @@ from fastapi import HTTPException
 
 from app.models.cart import CartItem
 from app.models.product import Product
-from app.schemas.cart import CartItemCreate, CartItemUpdate, CartRemoveResponse, CartClearResponse, CartTotalResponse
+from app.schemas.cart import CartItemCreate, CartItemUpdate, CartRemoveResponse, CartClearResponse, CartTotalResponse, CartDiscountResponse
 
 def get_cart_items(db: Session, user_id: int):
     cart_items = (
@@ -100,6 +100,7 @@ def clear_cart(db: Session, user_id: int):
     db.commit()
     return CartClearResponse(success=True, message="Cart cleared successfully")
 
+
 def get_cart_total(db: Session, user_id: int):
     cart_items = (
         db.query(CartItem)
@@ -107,6 +108,39 @@ def get_cart_total(db: Session, user_id: int):
         .filter(CartItem.user_id == user_id)
         .all()
     )
-    total = sum(item.product.price * item.quantity for item in cart_items if item.product)
-    item_count = sum(item.quantity for item in cart_items)
-    return CartTotalResponse(total=total, item_count=item_count)
+    total = 0.0
+    item_count = 0
+    items_details = []
+
+    for item in cart_items:
+        if item.product:
+            item_total = item.product.price * item.quantity
+            total += item_total
+            item_count += item.quantity
+            items_details.append({
+                "product_id": item.product.id,
+                "product_name": item.product.name,
+                "quantity": item.quantity,
+                "price": item.product.price,
+                "subtotal": item_total
+            })
+
+    return CartTotalResponse(total=total, item_count=item_count, items=items_details)
+
+
+def apply_discount(db: Session, user_id: int, discount_code: str):
+    # Fetch cart total
+    cart_total = get_cart_total(db, user_id)
+    # For simplicity, let's assume a flat 10% discount for a valid code 'SAVE10'
+    if discount_code == 'SAVE10':
+        discount = cart_total.total * 0.10
+        new_total = cart_total.total - discount
+        return CartDiscountResponse(
+            success=True,
+            total=cart_total.total,
+            discount_applied=discount,
+            new_total=new_total,
+            message="Discount applied successfully."
+        )
+    else:
+        raise HTTPException(status_code=400, detail="Invalid discount code")

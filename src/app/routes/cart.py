@@ -13,6 +13,8 @@ from app.schemas.cart import (
     CartAddResponse,
     CartUpdateResponse,
     CartItem,
+    CartDiscountResponse,  
+    CartDiscountRequest,  
 )
 from typing import List
 
@@ -62,14 +64,9 @@ def get_cart_total(user_id: int, db: Session = Depends(get_db)):
     return total
 
 
-#@router.post("/discount", response_model=cart_service.CartDiscountResponse)
-#def apply_discount(request: cart_service.CartDiscountRequest, db: Session = Depends(get_db)):
- #   # TODO: Implement discount logic
-   # raise HTTPException(status_code=501, detail="Not Implemented")
+@router.post("/discount", response_model=CartDiscountResponse)
+def apply_discount(request: CartDiscountRequest, db: Session = Depends(get_db)):
+    return cart_service.apply_discount(db=db, user_id=request.user_id, discount_code=request.discount_code)
 
 
-#@router.post("/save", response_model=cart_service.CartSaveResponse)
-#def save_cart(request: cart_service.CartSaveRequest, db: Session = Depends(get_db)):
-    # TODO: Implement save cart functionality
- #   raise HTTPException(status_code=501, detail="Not Implemented")
-#end code
+
