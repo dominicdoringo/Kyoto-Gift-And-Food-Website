@@ -1,5 +1,4 @@
-# routes/cart.py
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 import app.services.cart as cart_service
@@ -13,8 +12,8 @@ from app.schemas.cart import (
     CartAddResponse,
     CartUpdateResponse,
     CartItem,
-    CartDiscountResponse,  
-    CartDiscountRequest,  
+    CartDiscountResponse,
+    CartDiscountRequest,
 )
 from typing import List
 
@@ -59,14 +58,11 @@ def clear_cart(user_id: int, db: Session = Depends(get_db)):
 
 
 @router.get("/total", response_model=CartTotalResponse)
-def get_cart_total(user_id: int, db: Session = Depends(get_db)):
-    total = cart_service.get_cart_total(db=db, user_id=user_id)
+def get_cart_total(user_id: int, db: Session = Depends(get_db), tax_rate: float = 0.08):
+    total = cart_service.get_cart_total(db=db, user_id=user_id, tax_rate=tax_rate)
     return total
 
 
 @router.post("/discount", response_model=CartDiscountResponse)
 def apply_discount(request: CartDiscountRequest, db: Session = Depends(get_db)):
     return cart_service.apply_discount(db=db, user_id=request.user_id, discount_code=request.discount_code)
-
-
-

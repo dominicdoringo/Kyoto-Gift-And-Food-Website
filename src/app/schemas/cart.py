@@ -36,6 +36,17 @@ class CartItem(CartItemBase):
     class Config:
         orm_mode = True
 
+ 
+class CartItemDetail(BaseModel):
+    product_id: int
+    product_name: str
+    quantity: int
+    price: float
+    subtotal: float
+
+    class Config:
+        orm_mode = True       
+
 
 class CartAddResponse(BaseModel):
     success: bool
@@ -83,6 +94,8 @@ class CartTotalResponse(BaseModel):
     total: float
     item_count: int
     items: List[CartItemDetail]
+    tax: float
+    grand_total: float
 
     class Config:
         orm_mode = True

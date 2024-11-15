@@ -4,7 +4,7 @@ from fastapi import HTTPException
 
 from app.models.cart import CartItem
 from app.models.product import Product
-from app.schemas.cart import CartItemCreate, CartItemUpdate, CartRemoveResponse, CartClearResponse, CartTotalResponse, CartDiscountResponse
+from app.schemas.cart import CartItemCreate, CartItemUpdate, CartRemoveResponse, CartClearResponse, CartTotalResponse, CartDiscountResponse, CartItemDetail
 
 def get_cart_items(db: Session, user_id: int):
     cart_items = (
@@ -101,7 +101,7 @@ def clear_cart(db: Session, user_id: int):
     return CartClearResponse(success=True, message="Cart cleared successfully")
 
 
-def get_cart_total(db: Session, user_id: int):
+def get_cart_total(db: Session, user_id: int, tax_rate: float = 0.08):
     cart_items = (
         db.query(CartItem)
         .options(joinedload(CartItem.product))
@@ -125,11 +125,23 @@ def get_cart_total(db: Session, user_id: int):
                 "subtotal": item_total
             })
 
-    return CartTotalResponse(total=total, item_count=item_count, items=items_details)
+    # Calculate tax
+    tax = round(total * tax_rate, 2)
+
+    # Calculate grand total
+    grand_total = round(total + tax, 2)
+
+    return CartTotalResponse(
+        total=round(total, 2),
+        item_count=item_count,
+        items=items_details,
+        tax=tax,
+        grand_total=grand_total
+    )
 
 
 def apply_discount(db: Session, user_id: int, discount_code: str):
-    # Fetch cart total
+    
     cart_total = get_cart_total(db, user_id)
     # For simplicity, let's assume a flat 10% discount for a valid code 'SAVE10'
     if discount_code == 'SAVE10':
