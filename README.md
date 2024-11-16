@@ -1,21 +1,19 @@
-# app
+Dependency Configuration
+Dependencies are managed using the pyproject.toml file with Hatch, streamlining the environment setup and package management process.
+---------------------------------------------------------------------------------------------------------------------------------------
+Environment Setup
+Hatch Installation:
+Method: Utilized the GUI installer for ease of setup.
+---------------------------------------------------------------------------------------------------------------------------------------
+Virtual Environment Initialization
+Terminal Command:
+hatch shell
 
-[![PyPI - Version](https://img.shields.io/pypi/v/app.svg)](https://pypi.org/project/app)
-[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/app.svg)](https://pypi.org/project/app)
+Description: Creates and activates a virtual environment specific to the project
+---------------------------------------------------------------------------------------------------------------------------------------
+Virtual Environment Initialization
+Terminal Command:
 
------
-
-## Table of Contents
-
-- [Installation](#installation)
-- [License](#license)
-
-## Installation
-
-```console
-pip install app
-```
-
-## License
-
-`app` is distributed under the terms of the [MIT](https://spdx.org/licenses/MIT.html) license.
+hatch pip install .
+Description: Installs all dependencies listed in the pyproject.toml file.
+---------------------------------------------------------------------------------------------------------------------------------------
