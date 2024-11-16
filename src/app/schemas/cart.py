@@ -12,7 +12,7 @@ class CartItemBase(BaseModel):
 
 class CartItemCreate(CartItemBase):
     product_id: int
-    # Removed user_id
+    quantity: int
 
 
 class CartItemUpdate(BaseModel):

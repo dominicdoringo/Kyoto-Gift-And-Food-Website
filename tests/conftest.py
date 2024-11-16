@@ -7,6 +7,19 @@ from sqlalchemy.orm import sessionmaker
 from app.core.database import Base
 from app.dependencies import get_db
 from app.main import app
+from app.core.config import Settings, get_settings
+# tests/conftest.py
+
+
+
+def get_test_settings():
+    return Settings(
+        SECRET_KEY="secretkey",
+        # Add other settings as needed
+    )
+
+app.dependency_overrides[get_settings] = get_test_settings
+
 
 # Use the test database file
 SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
