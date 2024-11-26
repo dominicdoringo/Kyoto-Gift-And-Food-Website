@@ -1,60 +1,59 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Search, Menu } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import { useState } from 'react';
+import { Search, Menu } from 'lucide-react';
+import { Input } from '@/components/ui/input';
 import {
 	Card,
 	CardContent,
 	CardDescription,
 	CardHeader,
 	CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+} from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 
 // Mock data for courses
 const courses = [
 	{
 		id: 1,
-		name: "Introduction to Computer Science",
-		instructor: "Dr. Alan Turing",
-		description: "Learn the basics of computer science and programming.",
+		name: 'Introduction to Computer Science',
+		instructor: 'Dr. Alan Turing',
+		description: 'Learn the basics of computer science and programming.',
 	},
 	{
 		id: 2,
-		name: "Advanced Mathematics",
-		instructor: "Prof. Katherine Johnson",
-		description: "Dive deep into calculus, linear algebra, and more.",
+		name: 'Advanced Mathematics',
+		instructor: 'Prof. Katherine Johnson',
+		description: 'Dive deep into calculus, linear algebra, and more.',
 	},
 	{
 		id: 3,
-		name: "World History",
-		instructor: "Dr. Howard Zinn",
-		description: "Explore major events and themes in world history.",
+		name: 'World History',
+		instructor: 'Dr. Howard Zinn',
+		description: 'Explore major events and themes in world history.',
 	},
 	{
 		id: 4,
-		name: "Environmental Science",
-		instructor: "Dr. Jane Goodall",
-		description: "Study the environment and its impact on our world.",
+		name: 'Environmental Science',
+		instructor: 'Dr. Jane Goodall',
+		description: 'Study the environment and its impact on our world.',
 	},
 	{
 		id: 5,
-		name: "Creative Writing",
-		instructor: "Margaret Atwood",
-		description:
-			"Develop your skills in various forms of creative writing.",
+		name: 'Creative Writing',
+		instructor: 'Margaret Atwood',
+		description: 'Develop your skills in various forms of creative writing.',
 	},
 	{
 		id: 6,
-		name: "Physics for Engineers",
-		instructor: "Dr. Michio Kaku",
-		description: "Apply physics principles to engineering problems.",
+		name: 'Physics for Engineers',
+		instructor: 'Dr. Michio Kaku',
+		description: 'Apply physics principles to engineering problems.',
 	},
 ];
 
 export function AvailableCoursesComponent() {
-	const [searchTerm, setSearchTerm] = useState("");
+	const [searchTerm, setSearchTerm] = useState('');
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
 
 	const filteredCourses = courses.filter(
@@ -156,17 +155,13 @@ export function AvailableCoursesComponent() {
 							className="bg-gray-800 border-gray-700"
 						>
 							<CardHeader>
-								<CardTitle className="text-gray-100">
-									{course.name}
-								</CardTitle>
+								<CardTitle className="text-gray-100">{course.name}</CardTitle>
 								<CardDescription className="text-gray-400">
 									{course.instructor}
 								</CardDescription>
 							</CardHeader>
 							<CardContent>
-								<p className="text-gray-300">
-									{course.description}
-								</p>
+								<p className="text-gray-300">{course.description}</p>
 							</CardContent>
 						</Card>
 					))}
