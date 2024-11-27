@@ -14,15 +14,11 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { useState } from 'react';
+import { useToast } from '@/hooks/use-toast';
+import { API_HOST_BASE_URL } from '@/lib/constants';
 
 // Zod schema for form validation
 const signUpSchema = z.object({
-	firstName: z
-		.string()
-		.min(2, { message: 'First name must be at least 2 characters' }),
-	lastName: z
-		.string()
-		.min(2, { message: 'Last name must be at least 2 characters' }),
 	username: z
 		.string()
 		.min(3, { message: 'Username must be at least 3 characters' })
@@ -45,13 +41,12 @@ const signUpSchema = z.object({
 
 export function SignUpForm() {
 	const [isSubmitting, setIsSubmitting] = useState(false);
+	const { toast } = useToast();
 
 	// Initialize the form with zod resolver
 	const form = useForm<z.infer<typeof signUpSchema>>({
 		resolver: zodResolver(signUpSchema),
 		defaultValues: {
-			firstName: '',
-			lastName: '',
 			username: '',
 			email: '',
 			password: '',
@@ -62,16 +57,41 @@ export function SignUpForm() {
 	async function onSubmit(values: z.infer<typeof signUpSchema>) {
 		setIsSubmitting(true);
 		try {
-			// TODO: Implement actual sign-up logic (e.g., API call)
-			console.log('Sign Up Values:', values);
+			// Send POST request to the API
+			const response = await fetch(`${API_HOST_BASE_URL}/users/register`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(values),
+			});
 
-			// Simulated API call
-			await new Promise((resolve) => setTimeout(resolve, 2000));
+			if (response.ok) {
+				// Registration successful
+				toast({
+					title: 'Registration Successful',
+					description: 'Your account has been created successfully.',
+				});
 
-			// Reset form after successful submission
-			form.reset();
+				// Optionally redirect the user or reset the form
+				form.reset();
+			} else {
+				// Handle errors returned from the API
+				const errorData = await response.json();
+				toast({
+					title: 'Registration Failed',
+					description:
+						errorData.detail || 'An error occurred during registration.',
+					variant: 'destructive',
+				});
+			}
 		} catch (error) {
 			console.error('Sign up failed', error);
+			toast({
+				title: 'Registration Failed',
+				description: 'An unexpected error occurred.',
+				variant: 'destructive',
+			});
 		} finally {
 			setIsSubmitting(false);
 		}
@@ -83,41 +103,7 @@ export function SignUpForm() {
 				onSubmit={form.handleSubmit(onSubmit)}
 				className="space-y-4 w-full max-w-md"
 			>
-				<div className="grid grid-cols-2 gap-4">
-					<FormField
-						control={form.control}
-						name="firstName"
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel>First Name</FormLabel>
-								<FormControl>
-									<Input
-										placeholder="John"
-										{...field}
-									/>
-								</FormControl>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-					<FormField
-						control={form.control}
-						name="lastName"
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel>Last Name</FormLabel>
-								<FormControl>
-									<Input
-										placeholder="Doe"
-										{...field}
-									/>
-								</FormControl>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-				</div>
-
+				{/* Username */}
 				<FormField
 					control={form.control}
 					name="username"
@@ -135,6 +121,7 @@ export function SignUpForm() {
 					)}
 				/>
 
+				{/* Email */}
 				<FormField
 					control={form.control}
 					name="email"
@@ -153,6 +140,7 @@ export function SignUpForm() {
 					)}
 				/>
 
+				{/* Password */}
 				<FormField
 					control={form.control}
 					name="password"
@@ -171,6 +159,7 @@ export function SignUpForm() {
 					)}
 				/>
 
+				{/* Submit Button */}
 				<Button
 					type="submit"
 					className="w-full"
