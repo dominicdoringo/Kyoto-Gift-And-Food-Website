@@ -10,37 +10,38 @@ const featuredItems = [
 		name: 'Pocky Chocolate',
 		price: 2.99,
 		description: 'Classic Japanese chocolate-coated biscuit sticks',
-		imageUrl: '',
+		imageUrl: 'https://m.media-amazon.com/images/I/81UAcnIvi5L.jpg',
 	},
 	{
 		name: 'Matcha KitKat',
 		price: 4.99,
 		description: 'Green tea flavored chocolate wafer bars',
-		imageUrl: '',
+		imageUrl: 'https://m.media-amazon.com/images/I/81co+3MgqlL.jpg',
 	},
 	{
 		name: 'Ramune Soda',
 		price: 2.49,
 		description: 'Japanese marble soft drink with unique bottle design',
-		imageUrl: '',
+		imageUrl:
+			'https://m.media-amazon.com/images/I/81fDajWWbkL._AC_UF894,1000_QL80_.jpg',
 	},
 	{
 		name: 'Mochi Ice Cream',
 		price: 5.99,
 		description: 'Sweet rice dough filled with ice cream',
-		imageUrl: '',
+		imageUrl: 'https://m.media-amazon.com/images/I/81ix0M-Bk3L.jpg',
 	},
 	{
-		name: 'Green Tea',
+		name: 'Hawaiian Sun',
 		price: 3.99,
-		description: 'Premium Japanese green tea bags',
-		imageUrl: '',
+		description: 'Passion fruit flavored tropical drink',
+		imageUrl: 'https://m.media-amazon.com/images/I/81qnbcdAFoL.jpg',
 	},
 	{
-		name: 'Instant Ramen',
+		name: 'Shin Instant Ramen',
 		price: 1.99,
 		description: 'Quick and delicious authentic Asian noodles',
-		imageUrl: '',
+		imageUrl: 'https://m.media-amazon.com/images/I/81kFdSChhKL.jpg',
 	},
 ];
 
