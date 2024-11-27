@@ -13,7 +13,7 @@ import { LogIn, Menu, UserRoundPlus } from 'lucide-react';
 
 const navList = [
 	{
-		label: 'Dashboard',
+		label: 'Featured',
 		link: '/',
 	},
 	{
