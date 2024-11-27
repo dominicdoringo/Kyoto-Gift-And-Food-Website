@@ -1,9 +1,13 @@
+'use client';
+
+import { FeaturedItems } from '@/components/featured-items';
+import { PromoBanner } from '@/components/promo-banner';
+
 export default function Home() {
-	const count = 5;
 	return (
-		<div>
-			<h1>Home</h1>
-			<p>Welcome to the home page{count}</p>
-		</div>
+		<main>
+			<FeaturedItems />
+			<PromoBanner />
+		</main>
 	);
 }

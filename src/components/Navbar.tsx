@@ -17,8 +17,8 @@ const navList = [
 		link: '/',
 	},
 	{
-		label: 'Summary',
-		link: '/summary',
+		label: 'Categories',
+		link: '/Categories',
 	},
 	{
 		label: 'About',
