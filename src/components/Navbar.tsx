@@ -9,7 +9,7 @@ import { ModeToggle } from '@/components/mode-toggle';
 import UserButton from '@/components/UserButton';
 import { useState } from 'react';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { LogIn, Menu, UserRoundPlus } from 'lucide-react';
+import { LogIn, Menu, UserRoundPlus, UserCircle } from 'lucide-react';
 
 const navList = [
 	{
@@ -117,7 +117,11 @@ function DesktopNavbar() {
 					</Link>
 
 					<ModeToggle />
-					<UserButton />
+					<Link href="/user">
+						<Button variant={'ghost'}>
+							<UserCircle />
+						</Button>
+					</Link>
 				</div>
 			</nav>
 		</div>
