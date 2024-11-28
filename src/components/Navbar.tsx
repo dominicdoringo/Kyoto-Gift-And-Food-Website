@@ -2,8 +2,8 @@
 
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { useRouter, usePathname } from 'next/navigation';
+import React, { useState } from 'react';
+import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { LogIn, LogOut, Menu, UserRoundPlus, UserCircle } from 'lucide-react';
 import { Button, buttonVariants } from '@/components/ui/button';
@@ -12,6 +12,7 @@ import Logo, { LogoMobile } from '@/components/Logo';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { useAuth } from '@/context/AuthContext'; // Import useAuth hook
 
 const navList = [
 	{
@@ -43,139 +44,124 @@ export function Navbar() {
 
 function MobileNavbar() {
 	const [isOpen, setIsOpen] = useState(false);
-	const [isLoggedIn, setIsLoggedIn] = useState(false);
-	const router = useRouter();
+	const { isLoggedIn, logout } = useAuth(); // Access auth state and logout function
 	const { toast } = useToast();
 
-	useEffect(() => {
-		const token = localStorage.getItem('accessToken');
-		setIsLoggedIn(!!token);
-	}, []);
-
-	const handleLogout = () => {
-		localStorage.removeItem('accessToken');
-		setIsLoggedIn(false);
+	const handleLogoutClick = () => {
+		logout();
 		toast({
 			title: 'Logged Out',
 			description: 'You have been successfully logged out.',
 		});
-		router.push('/sign-in');
 	};
 
 	return (
-		<>
-			<div className="block border-separate bg-background md:hidden">
-				<nav className="container flex items-center justify-between px-8">
-					<Sheet
-						open={isOpen}
-						onOpenChange={setIsOpen}
-					>
-						<SheetTrigger asChild>
-							<Button
-								variant="ghost"
-								size="icon"
-							>
-								<Menu />
-							</Button>
-						</SheetTrigger>
-						<SheetContent
-							className="w-[400px] sm:w-[540px]"
-							side={'left'}
+		<div className="block border-separate bg-background md:hidden">
+			<nav className="container flex items-center justify-between px-8">
+				<Sheet
+					open={isOpen}
+					onOpenChange={setIsOpen}
+				>
+					<SheetTrigger asChild>
+						<Button
+							variant="ghost"
+							size="icon"
 						>
-							<Logo />
-							<div className="flex flex-col gap-1 pt-4">
-								{navList.map((item) => (
-									<NavbarItem
-										key={item.label}
-										link={item.link}
-										label={item.label}
-										clickCallBack={() => setIsOpen(false)}
-									/>
-								))}
-								{isLoggedIn ? (
-									<Button
-										variant="ghost"
-										onClick={handleLogout}
-										className="mt-2"
-									>
-										<LogOut className="mr-2" /> Logout
-									</Button>
-								) : (
-									<>
-										<Link href="/sign-in">
-											<Button
-												variant="ghost"
-												className="mt-2"
-												onClick={() => setIsOpen(false)}
-											>
-												<LogIn className="mr-2" /> Login
-											</Button>
-										</Link>
-										<Link href="/sign-up">
-											<Button
-												variant="ghost"
-												className="mt-2"
-												onClick={() => setIsOpen(false)}
-											>
-												<UserRoundPlus className="mr-2" /> Sign Up
-											</Button>
-										</Link>
-									</>
-								)}
-							</div>
-						</SheetContent>
-					</Sheet>
-					<div className="flex h-[80px] min-h-[60px] items-center gap-x-4">
-						<LogoMobile />
-					</div>
-					<div className="flex items-center gap-2">
-						<ModeToggle />
-						{isLoggedIn ? (
-							<Button
-								variant="ghost"
-								onClick={handleLogout}
-							>
-								<LogOut />
-							</Button>
-						) : (
-							<>
-								<Link href="/sign-in">
-									<Button variant="ghost">
-										<LogIn />
-									</Button>
-								</Link>
-								<Link href="/sign-up">
-									<Button variant="ghost">
-										<UserRoundPlus />
-									</Button>
-								</Link>
-							</>
-						)}
-					</div>
-				</nav>
-			</div>
-		</>
+							<Menu />
+						</Button>
+					</SheetTrigger>
+					<SheetContent
+						className="w-[400px] sm:w-[540px]"
+						side={'left'}
+					>
+						<Logo />
+						<div className="flex flex-col gap-1 pt-4">
+							{navList.map((item) => (
+								<NavbarItem
+									key={item.label}
+									link={item.link}
+									label={item.label}
+									clickCallBack={() => setIsOpen(false)}
+								/>
+							))}
+							{isLoggedIn ? (
+								<Button
+									variant="ghost"
+									onClick={() => {
+										handleLogoutClick();
+										setIsOpen(false);
+									}}
+									className="mt-2"
+								>
+									<LogOut className="mr-2" /> Logout
+								</Button>
+							) : (
+								<>
+									<Link href="/sign-in">
+										<Button
+											variant="ghost"
+											className="mt-2"
+											onClick={() => setIsOpen(false)}
+										>
+											<LogIn className="mr-2" /> Login
+										</Button>
+									</Link>
+									<Link href="/sign-up">
+										<Button
+											variant="ghost"
+											className="mt-2"
+											onClick={() => setIsOpen(false)}
+										>
+											<UserRoundPlus className="mr-2" /> Sign Up
+										</Button>
+									</Link>
+								</>
+							)}
+						</div>
+					</SheetContent>
+				</Sheet>
+				<div className="flex h-[80px] min-h-[60px] items-center gap-x-4">
+					<LogoMobile />
+				</div>
+				<div className="flex items-center gap-2">
+					<ModeToggle />
+					{isLoggedIn ? (
+						<Button
+							variant="ghost"
+							onClick={logout}
+						>
+							<LogOut />
+						</Button>
+					) : (
+						<>
+							<Link href="/sign-in">
+								<Button variant="ghost">
+									<LogIn />
+								</Button>
+							</Link>
+							<Link href="/sign-up">
+								<Button variant="ghost">
+									<UserRoundPlus />
+								</Button>
+							</Link>
+						</>
+					)}
+				</div>
+			</nav>
+		</div>
 	);
 }
 
 function DesktopNavbar() {
-	const [isLoggedIn, setIsLoggedIn] = useState(false);
-	const router = useRouter();
+	const { isLoggedIn, logout } = useAuth(); // Access auth state and logout function
 	const { toast } = useToast();
 
-	useEffect(() => {
-		const token = localStorage.getItem('accessToken');
-		setIsLoggedIn(!!token);
-	}, []);
-
-	const handleLogout = () => {
-		localStorage.removeItem('accessToken');
-		setIsLoggedIn(false);
+	const handleLogoutClick = () => {
+		logout();
 		toast({
 			title: 'Logged Out',
 			description: 'You have been successfully logged out.',
 		});
-		router.push('/sign-in');
 	};
 
 	return (
@@ -198,7 +184,7 @@ function DesktopNavbar() {
 						<>
 							<Button
 								variant="ghost"
-								onClick={handleLogout}
+								onClick={handleLogoutClick}
 							>
 								<LogOut />
 							</Button>

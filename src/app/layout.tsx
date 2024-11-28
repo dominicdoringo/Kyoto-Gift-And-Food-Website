@@ -1,8 +1,10 @@
+// src/app/layout.tsx
+
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import './globals.css';
 import { Navbar } from '@/components/Navbar';
-import { ThemeProvider } from '@/providers/theme-provider';
+import Providers from '@/components/Providers'; // Import the Providers component
 import { Toaster } from '@/components/ui/toaster';
 
 const geistSans = localFont({
@@ -35,15 +37,10 @@ export default function RootLayout({
 				className={`${geistSans.variable} ${geistMono.variable} antialiased`}
 			>
 				<Toaster />
-				<ThemeProvider
-					attribute="class"
-					defaultTheme="dark"
-					enableSystem
-					disableTransitionOnChange
-				>
+				<Providers>
 					<Navbar />
 					{children}
-				</ThemeProvider>
+				</Providers>
 			</body>
 		</html>
 	);
