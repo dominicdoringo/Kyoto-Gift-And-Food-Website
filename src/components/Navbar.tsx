@@ -5,7 +5,7 @@
 import React, { useState } from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { LogIn, LogOut, Menu, UserRoundPlus, UserCircle } from 'lucide-react';
+import { LogIn, Power, Menu, UserRoundPlus, UserCircle } from 'lucide-react'; // Updated Import
 import { Button, buttonVariants } from '@/components/ui/button';
 import { ModeToggle } from '@/components/mode-toggle';
 import Logo, { LogoMobile } from '@/components/Logo';
@@ -93,7 +93,7 @@ function MobileNavbar() {
 									}}
 									className="mt-2"
 								>
-									<LogOut className="mr-2" /> Logout
+									<Power className="mr-2" /> Logout
 								</Button>
 							) : (
 								<>
@@ -128,9 +128,9 @@ function MobileNavbar() {
 					{isLoggedIn ? (
 						<Button
 							variant="ghost"
-							onClick={logout}
+							onClick={handleLogoutClick}
 						>
-							<LogOut />
+							<Power /> {/* Updated Icon */}
 						</Button>
 					) : (
 						<>
@@ -186,7 +186,7 @@ function DesktopNavbar() {
 								variant="ghost"
 								onClick={handleLogoutClick}
 							>
-								<LogOut />
+								<Power /> {/* Updated Icon */}
 							</Button>
 							<Link href="/user">
 								<Button variant={'ghost'}>
