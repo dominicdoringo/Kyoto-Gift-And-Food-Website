@@ -16,6 +16,8 @@ import { Input } from '@/components/ui/input';
 import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { API_HOST_BASE_URL } from '@/lib/constants';
+import { useRouter } from 'next/navigation';
+import { Modal } from '@/components/ui/modal'; // Import your Modal component
 
 // Zod schema for form validation
 const signUpSchema = z.object({
@@ -41,7 +43,9 @@ const signUpSchema = z.object({
 
 export function SignUpForm() {
 	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [isModalOpen, setIsModalOpen] = useState(false);
 	const { toast } = useToast();
+	const router = useRouter();
 
 	// Initialize the form with zod resolver
 	const form = useForm<z.infer<typeof signUpSchema>>({
@@ -70,11 +74,11 @@ export function SignUpForm() {
 				// Registration successful
 				toast({
 					title: 'Registration Successful',
-					description: 'Your account has been created successfully.',
+					description: 'Please verify your email to complete registration.',
 				});
 
-				// Optionally redirect the user or reset the form
-				form.reset();
+				// Show the verification prompt modal
+				setIsModalOpen(true);
 			} else {
 				// Handle errors returned from the API
 				const errorData = await response.json();
@@ -98,76 +102,94 @@ export function SignUpForm() {
 	}
 
 	return (
-		<Form {...form}>
-			<form
-				onSubmit={form.handleSubmit(onSubmit)}
-				className="space-y-4 w-full max-w-md"
-			>
-				{/* Username */}
-				<FormField
-					control={form.control}
-					name="username"
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel>Username</FormLabel>
-							<FormControl>
-								<Input
-									placeholder="johndoe123"
-									{...field}
-								/>
-							</FormControl>
-							<FormMessage />
-						</FormItem>
-					)}
-				/>
-
-				{/* Email */}
-				<FormField
-					control={form.control}
-					name="email"
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel>Email</FormLabel>
-							<FormControl>
-								<Input
-									placeholder="john.doe@example.com"
-									type="email"
-									{...field}
-								/>
-							</FormControl>
-							<FormMessage />
-						</FormItem>
-					)}
-				/>
-
-				{/* Password */}
-				<FormField
-					control={form.control}
-					name="password"
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel>Password</FormLabel>
-							<FormControl>
-								<Input
-									placeholder="********"
-									type="password"
-									{...field}
-								/>
-							</FormControl>
-							<FormMessage />
-						</FormItem>
-					)}
-				/>
-
-				{/* Submit Button */}
-				<Button
-					type="submit"
-					className="w-full"
-					disabled={isSubmitting}
+		<>
+			<Form {...form}>
+				<form
+					onSubmit={form.handleSubmit(onSubmit)}
+					className="space-y-4 w-full max-w-md"
 				>
-					{isSubmitting ? 'Signing Up...' : 'Create Account'}
-				</Button>
-			</form>
-		</Form>
+					{/* Username */}
+					<FormField
+						control={form.control}
+						name="username"
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>Username</FormLabel>
+								<FormControl>
+									<Input
+										placeholder="johndoe123"
+										{...field}
+									/>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+
+					{/* Email */}
+					<FormField
+						control={form.control}
+						name="email"
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>Email</FormLabel>
+								<FormControl>
+									<Input
+										placeholder="john.doe@example.com"
+										type="email"
+										{...field}
+									/>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+
+					{/* Password */}
+					<FormField
+						control={form.control}
+						name="password"
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>Password</FormLabel>
+								<FormControl>
+									<Input
+										placeholder="********"
+										type="password"
+										{...field}
+									/>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+
+					{/* Submit Button */}
+					<Button
+						type="submit"
+						className="w-full"
+						disabled={isSubmitting}
+					>
+						{isSubmitting ? 'Signing Up...' : 'Create Account'}
+					</Button>
+				</form>
+			</Form>
+
+			{/* Modal Component */}
+			{isModalOpen && (
+				<Modal onClose={() => router.push('/sign-in')}>
+					<div className="p-6">
+						<h2 className="text-xl font-bold mb-4">Verify Your Email</h2>
+						<p className="mb-4">
+							Please complete your registration by verifying your email. We've
+							sent a verification link to your email address.
+						</p>
+						<Button onClick={() => router.push('/sign-in')}>
+							Sign In Page
+						</Button>
+					</div>
+				</Modal>
+			)}
+		</>
 	);
 }
