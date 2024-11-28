@@ -1,15 +1,17 @@
+// src/components/Navbar.tsx
+
 'use client';
 
-import Logo, { LogoMobile } from '@/components/Logo';
-import { usePathname } from 'next/navigation';
+import React, { useState, useEffect } from 'react';
+import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { cn } from '@/lib/utils';
+import { LogIn, LogOut, Menu, UserRoundPlus, UserCircle } from 'lucide-react';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { ModeToggle } from '@/components/mode-toggle';
-import UserButton from '@/components/UserButton';
-import { useState } from 'react';
+import Logo, { LogoMobile } from '@/components/Logo';
+import { useToast } from '@/hooks/use-toast';
+import { cn } from '@/lib/utils';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { LogIn, Menu, UserRoundPlus, UserCircle } from 'lucide-react';
 
 const navList = [
 	{
@@ -41,6 +43,24 @@ export function Navbar() {
 
 function MobileNavbar() {
 	const [isOpen, setIsOpen] = useState(false);
+	const [isLoggedIn, setIsLoggedIn] = useState(false);
+	const router = useRouter();
+	const { toast } = useToast();
+
+	useEffect(() => {
+		const token = localStorage.getItem('accessToken');
+		setIsLoggedIn(!!token);
+	}, []);
+
+	const handleLogout = () => {
+		localStorage.removeItem('accessToken');
+		setIsLoggedIn(false);
+		toast({
+			title: 'Logged Out',
+			description: 'You have been successfully logged out.',
+		});
+		router.push('/sign-in');
+	};
 
 	return (
 		<>
@@ -69,9 +89,39 @@ function MobileNavbar() {
 										key={item.label}
 										link={item.link}
 										label={item.label}
-										clickCallBack={() => setIsOpen((prev) => !prev)}
+										clickCallBack={() => setIsOpen(false)}
 									/>
 								))}
+								{isLoggedIn ? (
+									<Button
+										variant="ghost"
+										onClick={handleLogout}
+										className="mt-2"
+									>
+										<LogOut className="mr-2" /> Logout
+									</Button>
+								) : (
+									<>
+										<Link href="/sign-in">
+											<Button
+												variant="ghost"
+												className="mt-2"
+												onClick={() => setIsOpen(false)}
+											>
+												<LogIn className="mr-2" /> Login
+											</Button>
+										</Link>
+										<Link href="/sign-up">
+											<Button
+												variant="ghost"
+												className="mt-2"
+												onClick={() => setIsOpen(false)}
+											>
+												<UserRoundPlus className="mr-2" /> Sign Up
+											</Button>
+										</Link>
+									</>
+								)}
 							</div>
 						</SheetContent>
 					</Sheet>
@@ -80,7 +130,27 @@ function MobileNavbar() {
 					</div>
 					<div className="flex items-center gap-2">
 						<ModeToggle />
-						{/*<UserButton afterSignOutUrl="/sign-in" />*/}
+						{isLoggedIn ? (
+							<Button
+								variant="ghost"
+								onClick={handleLogout}
+							>
+								<LogOut />
+							</Button>
+						) : (
+							<>
+								<Link href="/sign-in">
+									<Button variant="ghost">
+										<LogIn />
+									</Button>
+								</Link>
+								<Link href="/sign-up">
+									<Button variant="ghost">
+										<UserRoundPlus />
+									</Button>
+								</Link>
+							</>
+						)}
 					</div>
 				</nav>
 			</div>
@@ -89,6 +159,25 @@ function MobileNavbar() {
 }
 
 function DesktopNavbar() {
+	const [isLoggedIn, setIsLoggedIn] = useState(false);
+	const router = useRouter();
+	const { toast } = useToast();
+
+	useEffect(() => {
+		const token = localStorage.getItem('accessToken');
+		setIsLoggedIn(!!token);
+	}, []);
+
+	const handleLogout = () => {
+		localStorage.removeItem('accessToken');
+		setIsLoggedIn(false);
+		toast({
+			title: 'Logged Out',
+			description: 'You have been successfully logged out.',
+		});
+		router.push('/sign-in');
+	};
+
 	return (
 		<div className="hidden border-separate border-b bg-background md:block">
 			<nav className="container flex items-center justify-between px-8">
@@ -105,23 +194,35 @@ function DesktopNavbar() {
 					</div>
 				</div>
 				<div className="flex items-center gap-2">
-					<Link href="/sign-in">
-						<Button variant={'ghost'}>
-							<LogIn />
-						</Button>
-					</Link>
-					<Link href="/sign-up">
-						<Button variant={'ghost'}>
-							<UserRoundPlus />
-						</Button>
-					</Link>
-
+					{isLoggedIn ? (
+						<>
+							<Button
+								variant="ghost"
+								onClick={handleLogout}
+							>
+								<LogOut />
+							</Button>
+							<Link href="/user">
+								<Button variant={'ghost'}>
+									<UserCircle />
+								</Button>
+							</Link>
+						</>
+					) : (
+						<>
+							<Link href="/sign-in">
+								<Button variant={'ghost'}>
+									<LogIn />
+								</Button>
+							</Link>
+							<Link href="/sign-up">
+								<Button variant={'ghost'}>
+									<UserRoundPlus />
+								</Button>
+							</Link>
+						</>
+					)}
 					<ModeToggle />
-					<Link href="/user">
-						<Button variant={'ghost'}>
-							<UserCircle />
-						</Button>
-					</Link>
 				</div>
 			</nav>
 		</div>
@@ -138,25 +239,23 @@ function NavbarItem({ link, label, clickCallBack }: NavbarItemProps) {
 	const pathname = usePathname();
 	const isActive = pathname === link;
 	return (
-		<>
-			<div className="relative flex items-center">
-				<Link
-					href={link}
-					className={cn(
-						buttonVariants({ variant: 'ghost' }),
-						'w-full justify-start text-lg text-muted-foreground hover:text-foreground',
-						isActive && 'text-foreground'
-					)}
-					onClick={() => {
-						if (clickCallBack) clickCallBack();
-					}}
-				>
-					{label}
-				</Link>
-				{isActive && (
-					<div className="absolute -bottom-[2px] left-1/2 hidden h-[2px] w-[80%] -translate-x-1/2 rounded-xl bg-foreground md:block" />
+		<div className="relative flex items-center">
+			<Link
+				href={link}
+				className={cn(
+					buttonVariants({ variant: 'ghost' }),
+					'w-full justify-start text-lg text-muted-foreground hover:text-foreground',
+					isActive && 'text-foreground'
 				)}
-			</div>
-		</>
+				onClick={() => {
+					if (clickCallBack) clickCallBack();
+				}}
+			>
+				{label}
+			</Link>
+			{isActive && (
+				<div className="absolute -bottom-[2px] left-1/2 hidden h-[2px] w-[80%] -translate-x-1/2 rounded-xl bg-foreground md:block" />
+			)}
+		</div>
 	);
 }

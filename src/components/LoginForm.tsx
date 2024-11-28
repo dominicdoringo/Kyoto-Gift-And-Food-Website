@@ -17,7 +17,6 @@ import {
 } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { API_HOST_BASE_URL } from '@/lib/constants';
-import { useRouter } from 'next/navigation';
 
 // Zod schema for form validation
 const loginSchema = z.object({
@@ -26,12 +25,12 @@ const loginSchema = z.object({
 		.min(3, { message: 'Username must be at least 3 characters long' }),
 	password: z
 		.string()
-		.min(8, { message: 'Password must be at least 8 characters long' }),
+		.min(3, { message: 'Password must be at least 8 characters long' }),
 });
 
 type LoginFormValues = z.infer<typeof loginSchema>;
 
-// Function to log in the user
+// Simulated server action (in a real app, this would be in a separate file)
 async function loginUser(data: LoginFormValues) {
 	const response = await fetch(`${API_HOST_BASE_URL}/users/token`, {
 		method: 'POST',
@@ -53,7 +52,6 @@ async function loginUser(data: LoginFormValues) {
 export function LoginForm() {
 	const [isLoading, setIsLoading] = useState(false);
 	const { toast } = useToast();
-	const router = useRouter();
 	const {
 		register,
 		handleSubmit,
@@ -73,8 +71,6 @@ export function LoginForm() {
 					title: 'Login Successful',
 					description: 'You have been successfully logged in.',
 				});
-				// Redirect to UserPage
-				router.push('/user');
 			}
 		} catch (error) {
 			toast({
