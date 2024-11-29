@@ -20,7 +20,7 @@ import { useToast } from '@/hooks/use-toast';
 const adminMenuItems = [
 	{ icon: Home, label: 'Dashboard', href: '/admin' },
 	{ icon: Users, label: 'List All Users', href: '/admin/users' },
-	{ icon: PencilLine, label: 'Update User Info', href: '/admin/users' },
+	{ icon: PencilLine, label: 'List All Products', href: '/admin/products' },
 ];
 
 interface AdminSidebarProps {
