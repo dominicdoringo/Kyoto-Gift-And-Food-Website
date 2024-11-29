@@ -1,56 +1,66 @@
+// src/components/featured-items.tsx
+
 'use client';
 
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { useRef } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { FeaturedItemCard } from '@/components/ui/featured-item-card';
+import { API_HOST_BASE_URL } from '@/lib/constants';
 
-const featuredItems = [
-	{
-		name: 'Pocky Chocolate',
-		price: 2.99,
-		description: 'Classic Japanese chocolate-coated biscuit sticks',
-		imageUrl: 'https://m.media-amazon.com/images/I/81UAcnIvi5L.jpg',
-	},
-	{
-		name: 'Matcha KitKat',
-		price: 4.99,
-		description: 'Green tea flavored chocolate wafer bars',
-		imageUrl: 'https://m.media-amazon.com/images/I/81co+3MgqlL.jpg',
-	},
-	{
-		name: 'Ramune Soda',
-		price: 2.49,
-		description: 'Japanese marble soft drink with unique bottle design',
-		imageUrl:
-			'https://m.media-amazon.com/images/I/81fDajWWbkL._AC_UF894,1000_QL80_.jpg',
-	},
-	{
-		name: 'Mochi Ice Cream',
-		price: 5.99,
-		description: 'Sweet rice dough filled with ice cream',
-		imageUrl: 'https://m.media-amazon.com/images/I/81ix0M-Bk3L.jpg',
-	},
-	{
-		name: 'Hawaiian Sun',
-		price: 3.99,
-		description: 'Passion fruit flavored tropical drink',
-		imageUrl: 'https://m.media-amazon.com/images/I/81qnbcdAFoL.jpg',
-	},
-	{
-		name: 'Shin Instant Ramen',
-		price: 1.99,
-		description: 'Quick and delicious authentic Asian noodles',
-		imageUrl: 'https://m.media-amazon.com/images/I/81kFdSChhKL.jpg',
-	},
-];
+interface Product {
+	id: number;
+	name: string;
+	description?: string;
+	price: number;
+	category: string;
+	stock: number;
+	featured: boolean;
+	created_at: string;
+	imageUrl?: string;
+}
 
 export function FeaturedItems() {
+	const [featuredItems, setFeaturedItems] = useState<Product[]>([]);
 	const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+	const imageMap: { [key: string]: string } = {
+		'Pocky Chocolate': 'https://m.media-amazon.com/images/I/81UAcnIvi5L.jpg',
+		'Matcha KitKat': 'https://m.media-amazon.com/images/I/81co+3MgqlL.jpg',
+		'Ramune Soda':
+			'https://m.media-amazon.com/images/I/81fDajWWbkL._AC_UF894,1000_QL80_.jpg',
+		'Mochi Ice Cream': 'https://m.media-amazon.com/images/I/81ix0M-Bk3L.jpg',
+		'Hawaiian Sun': 'https://m.media-amazon.com/images/I/81qnbcdAFoL.jpg',
+		'Shin Instant Ramen': 'https://m.media-amazon.com/images/I/81kFdSChhKL.jpg',
+	};
+
+	useEffect(() => {
+		const fetchFeaturedItems = async () => {
+			try {
+				const response = await fetch(
+					`${API_HOST_BASE_URL}/products?featured=true`
+				);
+				if (response.ok) {
+					const data: Product[] = await response.json();
+					const productsWithImages = data.map((product) => ({
+						...product,
+						imageUrl: imageMap[product.name] || '/default-image.png', // Provide a fallback image
+					}));
+					setFeaturedItems(productsWithImages);
+				} else {
+					console.error('Failed to fetch featured items');
+				}
+			} catch (error) {
+				console.error('Error fetching featured items:', error);
+			}
+		};
+
+		fetchFeaturedItems();
+	}, []);
 
 	const scroll = (direction: 'left' | 'right') => {
 		if (scrollContainerRef.current) {
-			const scrollAmount = 330; // Card width + gap
+			const scrollAmount = 330;
 			const scrollLeft = scrollContainerRef.current.scrollLeft;
 			const newScrollLeft =
 				direction === 'left'
@@ -73,10 +83,16 @@ export function FeaturedItems() {
 						ref={scrollContainerRef}
 						className="flex gap-6 overflow-x-hidden scroll-smooth pb-4"
 					>
-						{featuredItems.map((item, index) => (
+						{featuredItems.map((item) => (
 							<FeaturedItemCard
-								key={index}
-								{...item}
+								key={item.id}
+								name={item.name}
+								price={item.price}
+								description={item.description || ''}
+								imageUrl={
+									item.imageUrl ||
+									'https://m.media-amazon.com/images/I/81UAcnIvi5L.jpg'
+								}
 							/>
 						))}
 					</div>
