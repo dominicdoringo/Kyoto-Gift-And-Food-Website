@@ -129,6 +129,10 @@ export default function AdminUsersPage() {
 		}
 	};
 
+	const handleEditUser = (userId: number) => {
+		router.push(`/admin/users/edit/${userId}`);
+	};
+
 	return (
 		<SidebarProvider>
 			<div className="flex min-h-screen">
@@ -136,7 +140,14 @@ export default function AdminUsersPage() {
 				<SidebarInset className="flex-1">
 					<main className="flex-1 space-y-4 p-8 pt-6">
 						<h1 className="text-2xl font-bold mb-4">Manage Users</h1>
-						{loading ? <p>Loading users...</p> : <UsersTable users={users} />}
+						{loading ? (
+							<p>Loading users...</p>
+						) : (
+							<UsersTable
+								users={users}
+								onEditUser={handleEditUser}
+							/>
+						)}
 					</main>
 				</SidebarInset>
 			</div>

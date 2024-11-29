@@ -14,9 +14,10 @@ interface User {
 
 interface UsersTableProps {
 	users: User[];
+	onEditUser: (userId: number) => void;
 }
 
-export function UsersTable({ users }: UsersTableProps) {
+export function UsersTable({ users, onEditUser }: UsersTableProps) {
 	return (
 		<div className="overflow-x-auto">
 			<table className="min-w-full border border-gray-200 dark:border-gray-700">
@@ -37,7 +38,9 @@ export function UsersTable({ users }: UsersTableProps) {
 						<th className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-left text-gray-700 dark:text-gray-200">
 							Created At
 						</th>
-						{/* Add more columns as needed */}
+						<th className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-left text-gray-700 dark:text-gray-200">
+							Actions
+						</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -60,6 +63,17 @@ export function UsersTable({ users }: UsersTableProps) {
 							</td>
 							<td className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-100">
 								{new Date(user.created_at).toLocaleDateString()}
+							</td>
+							<td className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-100">
+								<button
+									onClick={() => {
+										console.log('Editing user with ID:', user.id);
+										onEditUser(user.id);
+									}}
+									className="text-blue-500 hover:underline"
+								>
+									Edit
+								</button>
 							</td>
 						</tr>
 					))}

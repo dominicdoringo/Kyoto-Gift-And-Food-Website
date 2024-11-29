@@ -1,6 +1,6 @@
 'use client';
 
-import { Home, Users, Settings, LogOut } from 'lucide-react';
+import { Home, Users, Settings, LogOut, PencilLine } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 
@@ -19,8 +19,8 @@ import { useToast } from '@/hooks/use-toast';
 
 const adminMenuItems = [
 	{ icon: Home, label: 'Dashboard', href: '/admin' },
-	{ icon: Users, label: 'Manage Users', href: '/admin/users' },
-	// Add more admin menu items as needed
+	{ icon: Users, label: 'List All Users', href: '/admin/users' },
+	{ icon: PencilLine, label: 'Update User Info', href: '/admin/users' },
 ];
 
 interface AdminSidebarProps {
