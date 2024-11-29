@@ -32,6 +32,7 @@ export function FeaturedItems() {
 		'Mochi Ice Cream': 'https://m.media-amazon.com/images/I/81ix0M-Bk3L.jpg',
 		'Hawaiian Sun': 'https://m.media-amazon.com/images/I/81qnbcdAFoL.jpg',
 		'Shin Instant Ramen': 'https://m.media-amazon.com/images/I/81kFdSChhKL.jpg',
+		Coke: 'https://m.media-amazon.com/images/I/714++YLlgwL._AC_UF894,1000_QL80_.jpg',
 	};
 
 	useEffect(() => {
@@ -89,10 +90,7 @@ export function FeaturedItems() {
 								name={item.name}
 								price={item.price}
 								description={item.description || ''}
-								imageUrl={
-									item.imageUrl ||
-									'https://m.media-amazon.com/images/I/81UAcnIvi5L.jpg'
-								}
+								imageUrl={item.imageUrl || '/default-image.png'}
 							/>
 						))}
 					</div>
