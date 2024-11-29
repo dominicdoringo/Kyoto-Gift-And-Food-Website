@@ -25,7 +25,6 @@ interface Product {
 interface UserData {
 	username: string;
 	email: string;
-	// Add other fields as needed
 }
 
 export default function AdminProductsPage() {
@@ -40,16 +39,52 @@ export default function AdminProductsPage() {
 		if (!isLoggedIn) {
 			router.replace('/sign-in');
 		} else if (!isAdmin) {
-			router.replace('/user'); // Redirect non-admin users
+			router.replace('/user');
 		} else {
-			fetchUserData(); // Fetch user data for the sidebar
-			fetchProducts(); // Fetch the list of products
+			fetchUserData();
+			fetchProducts();
 		}
 	}, [isLoggedIn, isAdmin, router]);
 
 	const fetchUserData = async () => {
-		// Similar to previous fetchUserData implementation
-		// Fetch data from /users/me endpoint and set userData
+		const token = localStorage.getItem('accessToken');
+		if (!token) {
+			toast({
+				title: 'Error',
+				description: 'No access token found.',
+				variant: 'destructive',
+			});
+			router.replace('/sign-in');
+			return;
+		}
+		try {
+			const response = await fetch(`${API_HOST_BASE_URL}/users/me`, {
+				method: 'GET',
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			});
+
+			if (response.ok) {
+				const data = await response.json();
+				setUserData(data);
+			} else {
+				const errorText = await response.text();
+				console.error('Failed to fetch user data:', errorText);
+				toast({
+					title: 'Error',
+					description: 'Failed to fetch user data.',
+					variant: 'destructive',
+				});
+			}
+		} catch (error) {
+			console.error('Error fetching user data:', error);
+			toast({
+				title: 'Error',
+				description: 'An unexpected error occurred.',
+				variant: 'destructive',
+			});
+		}
 	};
 
 	const fetchProducts = async () => {
@@ -100,6 +135,61 @@ export default function AdminProductsPage() {
 		router.push(`/admin/products/edit/${productId}`);
 	};
 
+	const handleDeleteProduct = async (productId: number) => {
+		const confirmDelete = confirm(
+			'Are you sure you want to delete this product?'
+		);
+		if (!confirmDelete) return;
+
+		const token = localStorage.getItem('accessToken');
+		if (!token) {
+			toast({
+				title: 'Error',
+				description: 'No access token found.',
+				variant: 'destructive',
+			});
+			router.replace('/sign-in');
+			return;
+		}
+
+		try {
+			const response = await fetch(
+				`${API_HOST_BASE_URL}/products/${productId}`,
+				{
+					method: 'DELETE',
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				}
+			);
+
+			if (response.ok) {
+				setProducts((prev) =>
+					prev.filter((product) => product.id !== productId)
+				);
+				toast({
+					title: 'Success',
+					description: 'Product deleted successfully.',
+					variant: 'default',
+				});
+			} else {
+				const errorData = await response.json();
+				toast({
+					title: 'Error',
+					description: errorData.detail || 'Failed to delete product.',
+					variant: 'destructive',
+				});
+			}
+		} catch (error) {
+			console.error('Error deleting product:', error);
+			toast({
+				title: 'Error',
+				description: 'An unexpected error occurred.',
+				variant: 'destructive',
+			});
+		}
+	};
+
 	return (
 		<SidebarProvider>
 			<div className="flex min-h-screen">
@@ -113,6 +203,7 @@ export default function AdminProductsPage() {
 							<ProductsTable
 								products={products}
 								onEditProduct={handleEditProduct}
+								onDeleteProduct={handleDeleteProduct}
 							/>
 						)}
 					</main>

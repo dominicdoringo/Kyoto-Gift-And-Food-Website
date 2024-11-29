@@ -18,22 +18,43 @@ interface Product {
 interface ProductsTableProps {
 	products: Product[];
 	onEditProduct: (productId: number) => void;
+	onDeleteProduct: (productId: number) => void;
 }
 
-export function ProductsTable({ products, onEditProduct }: ProductsTableProps) {
+export function ProductsTable({
+	products,
+	onEditProduct,
+	onDeleteProduct,
+}: ProductsTableProps) {
 	return (
 		<div className="overflow-x-auto">
 			<table className="min-w-full border border-gray-200 dark:border-gray-700">
 				<thead className="bg-gray-100 dark:bg-gray-800">
 					<tr>
-						<th className="py-2 px-4 border-b">ID</th>
-						<th className="py-2 px-4 border-b">Name</th>
-						<th className="py-2 px-4 border-b">Price</th>
-						<th className="py-2 px-4 border-b">Category</th>
-						<th className="py-2 px-4 border-b">Stock</th>
-						<th className="py-2 px-4 border-b">Featured</th>
-						<th className="py-2 px-4 border-b">Created At</th>
-						<th className="py-2 px-4 border-b">Actions</th>
+						<th className="py-2 px-4 border-b text-left text-gray-700 dark:text-gray-200">
+							ID
+						</th>
+						<th className="py-2 px-4 border-b text-left text-gray-700 dark:text-gray-200">
+							Name
+						</th>
+						<th className="py-2 px-4 border-b text-left text-gray-700 dark:text-gray-200">
+							Price
+						</th>
+						<th className="py-2 px-4 border-b text-left text-gray-700 dark:text-gray-200">
+							Category
+						</th>
+						<th className="py-2 px-4 border-b text-left text-gray-700 dark:text-gray-200">
+							Stock
+						</th>
+						<th className="py-2 px-4 border-b text-left text-gray-700 dark:text-gray-200">
+							Featured
+						</th>
+						<th className="py-2 px-4 border-b text-left text-gray-700 dark:text-gray-200">
+							Created At
+						</th>
+						<th className="py-2 px-4 border-b text-left text-gray-700 dark:text-gray-200">
+							Actions
+						</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -42,25 +63,39 @@ export function ProductsTable({ products, onEditProduct }: ProductsTableProps) {
 							key={product.id}
 							className="hover:bg-gray-50 dark:hover:bg-gray-700"
 						>
-							<td className="py-2 px-4 border-b">{product.id}</td>
-							<td className="py-2 px-4 border-b">{product.name}</td>
-							<td className="py-2 px-4 border-b">
+							<td className="py-2 px-4 border-b text-gray-900 dark:text-gray-100">
+								{product.id}
+							</td>
+							<td className="py-2 px-4 border-b text-gray-900 dark:text-gray-100">
+								{product.name}
+							</td>
+							<td className="py-2 px-4 border-b text-gray-900 dark:text-gray-100">
 								${product.price.toFixed(2)}
 							</td>
-							<td className="py-2 px-4 border-b">{product.category}</td>
-							<td className="py-2 px-4 border-b">{product.stock}</td>
-							<td className="py-2 px-4 border-b">
+							<td className="py-2 px-4 border-b text-gray-900 dark:text-gray-100">
+								{product.category}
+							</td>
+							<td className="py-2 px-4 border-b text-gray-900 dark:text-gray-100">
+								{product.stock}
+							</td>
+							<td className="py-2 px-4 border-b text-gray-900 dark:text-gray-100">
 								{product.featured ? 'Yes' : 'No'}
 							</td>
-							<td className="py-2 px-4 border-b">
+							<td className="py-2 px-4 border-b text-gray-900 dark:text-gray-100">
 								{new Date(product.created_at).toLocaleDateString()}
 							</td>
-							<td className="py-2 px-4 border-b">
+							<td className="py-2 px-4 border-b text-gray-900 dark:text-gray-100">
 								<button
 									onClick={() => onEditProduct(product.id)}
-									className="text-blue-500 hover:underline"
+									className="text-blue-500 hover:underline mr-2"
 								>
 									Edit
+								</button>
+								<button
+									onClick={() => onDeleteProduct(product.id)}
+									className="text-red-500 hover:underline"
+								>
+									Delete
 								</button>
 							</td>
 						</tr>
