@@ -1,5 +1,7 @@
-# services/product.py
+# src/app/services/product.py
+
 from sqlalchemy.orm import Session
+from typing import Optional
 from fastapi import HTTPException
 
 from app.models.product import Product
@@ -14,8 +16,11 @@ def get_product_by_name(db: Session, name: str):
     return db.query(Product).filter(Product.name == name).first()
 
 
-def get_products(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(Product).offset(skip).limit(limit).all()
+def get_products(db: Session, skip: int = 0, limit: int = 100, featured: Optional[bool] = None):
+    query = db.query(Product)
+    if featured is not None:
+        query = query.filter(Product.featured == featured)
+    return query.offset(skip).limit(limit).all()
 
 
 def create_product(db: Session, product: ProductCreate):
@@ -51,4 +56,3 @@ def delete_product(db: Session, product_id: int):
     db.delete(db_product)
     db.commit()
     return {"detail": "Product deleted successfully"}
-#end code

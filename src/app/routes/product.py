@@ -1,7 +1,8 @@
 # src/app/routes/product.py
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
+from typing import Optional
 
 import app.services.product as product_service
 from app.dependencies import get_db
@@ -18,8 +19,13 @@ router = APIRouter()
 
 
 @router.get("/", response_model=list[Product])
-def get_products(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    products = product_service.get_products(db, skip=skip, limit=limit)
+def get_products(
+    skip: int = 0,
+    limit: int = 100,
+    featured: Optional[bool] = Query(None),
+    db: Session = Depends(get_db),
+):
+    products = product_service.get_products(db, skip=skip, limit=limit, featured=featured)
     return products
 
 
