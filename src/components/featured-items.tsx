@@ -25,6 +25,7 @@ export function FeaturedItems() {
 	const scrollContainerRef = useRef<HTMLDivElement>(null);
 
 	const imageMap: { [key: string]: string } = {
+		Coke: 'https://m.media-amazon.com/images/I/714++YLlgwL._AC_UF894,1000_QL80_.jpg',
 		'Pocky Chocolate': 'https://m.media-amazon.com/images/I/81UAcnIvi5L.jpg',
 		'Matcha KitKat': 'https://m.media-amazon.com/images/I/81co+3MgqlL.jpg',
 		'Ramune Soda':
@@ -32,7 +33,6 @@ export function FeaturedItems() {
 		'Mochi Ice Cream': 'https://m.media-amazon.com/images/I/81ix0M-Bk3L.jpg',
 		'Hawaiian Sun': 'https://m.media-amazon.com/images/I/81qnbcdAFoL.jpg',
 		'Shin Instant Ramen': 'https://m.media-amazon.com/images/I/81kFdSChhKL.jpg',
-		Coke: 'https://m.media-amazon.com/images/I/714++YLlgwL._AC_UF894,1000_QL80_.jpg',
 	};
 
 	useEffect(() => {
