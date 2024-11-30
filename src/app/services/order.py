@@ -8,7 +8,7 @@ from app.schemas.order import (
     OrderUpdate,
     OrderStatusHistory,
 )
-from app.services.cart import get_cart_items, clear_cart  # Import cart servicez
+from app.services.cart import get_cart_items, clear_cart  # Import cart 
 
 
 from decimal import Decimal, ROUND_HALF_UP, getcontext
