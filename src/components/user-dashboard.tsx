@@ -28,9 +28,7 @@ export function UserDashboard() {
 				</CardHeader>
 				<CardContent>
 					<div className="text-2xl font-bold">$1,234.56</div>
-					<p className="text-xs text-muted-foreground">
-						+$340.85 from last month
-					</p>
+					<p className="text-xs text-muted-foreground">+$340.85 from</p>
 				</CardContent>
 			</Card>
 			<Card>
