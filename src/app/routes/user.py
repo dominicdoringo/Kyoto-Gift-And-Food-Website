@@ -62,7 +62,7 @@ async def login_for_access_token(
         "expires_at": datetime.now(timezone.utc) + access_token_expires,
     }
 
-@router.get("/", response_model=UserResponse, tags=["Users"])
+@router.get("/me", response_model=UserResponse, tags=["Users"])
 def read_current_user(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     """
     Retrieve the currently authenticated user's details.

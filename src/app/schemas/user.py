@@ -19,7 +19,7 @@ class UserSchema(UserBase):  # Renamed from 'User' to 'UserSchema'
     id: int
     is_active: bool
     is_verified: bool
-    # Removed is_admin to prevent exposure
+    is_admin: bool
     created_at: datetime
 
     class Config:
@@ -30,7 +30,7 @@ class UserResponse(BaseModel):
     id: int
     username: str
     email: EmailStr
-    # Removed is_admin from this schema
+    is_admin: bool
     created_at: datetime
 
     class Config:
