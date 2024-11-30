@@ -99,14 +99,13 @@ def get_order(db: Session, user_id: int, order_id: int):
 def get_orders(db: Session, user_id: int, skip: int = 0, limit: int = 100):
     orders = (
         db.query(Order)
-        .options(joinedload(Order.items))
+        .options(joinedload(Order.items).joinedload(OrderItem.product))
         .filter(Order.user_id == user_id)
         .offset(skip)
         .limit(limit)
         .all()
     )
     return orders
-
 
 def update_order(db: Session, user_id: int, order_id: int, order_update: OrderUpdate):
     db_order = (

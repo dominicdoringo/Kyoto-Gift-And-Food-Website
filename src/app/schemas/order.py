@@ -12,13 +12,21 @@ class OrderItemBase(BaseModel):
     tax: float       # Added field
 
 
-class OrderItem(OrderItemBase):
+class ProductInOrderItem(BaseModel):
     id: int
+    name: str
+    description: Optional[str]
+    price: float
 
     class Config:
         orm_mode = True
 
+class OrderItem(OrderItemBase):
+    id: int
+    product: ProductInOrderItem  # Include product details
 
+    class Config:
+        orm_mode = True
 
 class OrderBase(BaseModel):
     payment_method: str
@@ -34,18 +42,19 @@ class OrderUpdate(BaseModel):
     shipping_address: Optional[str] = None
 
 
-class Order(OrderBase):
+class Order(BaseModel):
     id: int
     user_id: int
     status: str
     total: float
+    subtotal: float
+    tax: float
     created_at: datetime
     updated_at: datetime
     items: List[OrderItem]
 
     class Config:
         orm_mode = True
-
 
 class OrderCreateResponse(BaseModel):
     success: bool
