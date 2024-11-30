@@ -49,7 +49,7 @@ export function UserDashboard() {
 				<CardContent>
 					<div className="text-2xl font-bold">3</div>
 					<p className="text-xs text-muted-foreground">
-						2 items awaiting checkout
+						4 items awaiting checkout
 					</p>
 				</CardContent>
 			</Card>
