@@ -5,23 +5,23 @@ import { useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { FeaturedItemCard } from '@/components/ui/featured-item-card';
 
-const featuredItems = [
+const listItems = [
 	{
-		id: '1',
+		id: '0',
 		name: 'Pocky Chocolate',
 		price: 2.99,
 		description: 'Classic Japanese chocolate-coated biscuit sticks',
 		imageUrl: 'https://m.media-amazon.com/images/I/81UAcnIvi5L.jpg',
 	},
 	{
-		id: '2',
+		id: '1',
 		name: 'Matcha KitKat',
 		price: 4.99,
 		description: 'Green tea flavored chocolate wafer bars',
 		imageUrl: 'https://m.media-amazon.com/images/I/81co+3MgqlL.jpg',
 	},
 	{
-		id: '3',
+		id: '2',
 		name: 'Ramune Soda',
 		price: 2.49,
 		description: 'Japanese marble soft drink with unique bottle design',
@@ -29,21 +29,21 @@ const featuredItems = [
 			'https://m.media-amazon.com/images/I/81fDajWWbkL._AC_UF894,1000_QL80_.jpg',
 	},
 	{
-		id: '4',
+		id: '3',
 		name: 'Mochi Ice Cream',
 		price: 5.99,
 		description: 'Sweet rice dough filled with ice cream',
 		imageUrl: 'https://m.media-amazon.com/images/I/81ix0M-Bk3L.jpg',
 	},
 	{
-		id: '5',
+		id: '4',
 		name: 'Hawaiian Sun',
 		price: 3.99,
 		description: 'Passion fruit flavored tropical drink',
 		imageUrl: 'https://m.media-amazon.com/images/I/81qnbcdAFoL.jpg',
 	},
 	{
-		id: '6',
+		id: '5',
 		name: 'Shin Instant Ramen',
 		price: 1.99,
 		description: 'Quick and delicious authentic Asian noodles',
@@ -51,7 +51,7 @@ const featuredItems = [
 	},
 ];
 
-export function FeaturedItems() {
+export function ListItems({ title = '' }) {
 	const scrollContainerRef = useRef<HTMLDivElement>(null);
 
 	const scroll = (direction: 'left' | 'right') => {
@@ -73,13 +73,13 @@ export function FeaturedItems() {
 	return (
 		<section className="py-12 px-6">
 			<div className="max-w-7xl mx-auto">
-				<h2 className="text-4xl font-bold text-center mb-8">Featured Items</h2>
+				<h2 className="text-4xl font-bold text-center mb-8">{title}</h2>
 				<div className="relative">
 					<div
 						ref={scrollContainerRef}
 						className="flex gap-6 overflow-x-hidden scroll-smooth pb-4"
 					>
-						{featuredItems.map((item, index) => (
+						{listItems.map((item, index) => (
 							<FeaturedItemCard
 								key={index}
 								{...item}
