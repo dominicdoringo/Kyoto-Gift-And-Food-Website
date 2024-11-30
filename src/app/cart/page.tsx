@@ -34,6 +34,7 @@ import {
 	AlertDialogHeader,
 	AlertDialogTitle,
 } from '@/components/ui/alert-dialog'; // Import AlertDialog components
+import { useToast } from '@/hooks/use-toast'; // Correctly import useToast
 
 interface CartItem {
 	id: number;
@@ -63,11 +64,13 @@ interface CartTotal {
 export default function CartPage() {
 	const { isLoggedIn } = useAuth();
 	const router = useRouter();
+	const { toast } = useToast(); // Initialize toast correctly
 	const [cartItems, setCartItems] = useState<CartItem[]>([]);
 	const [cartTotal, setCartTotal] = useState<CartTotal | null>(null);
 	const [loading, setLoading] = useState<boolean>(true);
 	const [token, setToken] = useState<string | null>(null);
 	const [itemToRemove, setItemToRemove] = useState<number | null>(null);
+	const [isProcessing, setIsProcessing] = useState<boolean>(false); // Track processing state
 
 	// Corrected imageMap with proper quotation marks
 	const imageMap: { [key: string]: string } = {
@@ -95,10 +98,15 @@ export default function CartPage() {
 		setToken(accessToken);
 
 		// Fetch cart items and total
-		Promise.all([
-			fetchCartItems(accessToken),
-			fetchCartTotal(accessToken),
-		]).then(() => setLoading(false));
+		const fetchData = async () => {
+			await Promise.all([
+				fetchCartItems(accessToken),
+				fetchCartTotal(accessToken),
+			]);
+			setLoading(false);
+		};
+
+		fetchData();
 	}, [isLoggedIn, router]);
 
 	const fetchCartItems = async (token: string) => {
@@ -114,9 +122,19 @@ export default function CartPage() {
 				setCartItems(data);
 			} else {
 				console.error('Failed to fetch cart items');
+				toast({
+					title: 'Error',
+					description: 'Failed to fetch cart items.',
+					variant: 'destructive',
+				});
 			}
 		} catch (error) {
 			console.error('Error fetching cart items:', error);
+			toast({
+				title: 'Error',
+				description: 'An unexpected error occurred while fetching cart items.',
+				variant: 'destructive',
+			});
 		}
 	};
 
@@ -133,9 +151,19 @@ export default function CartPage() {
 				setCartTotal(data);
 			} else {
 				console.error('Failed to fetch cart total');
+				toast({
+					title: 'Error',
+					description: 'Failed to fetch cart total.',
+					variant: 'destructive',
+				});
 			}
 		} catch (error) {
 			console.error('Error fetching cart total:', error);
+			toast({
+				title: 'Error',
+				description: 'An unexpected error occurred while fetching cart total.',
+				variant: 'destructive',
+			});
 		}
 	};
 
@@ -160,11 +188,25 @@ export default function CartPage() {
 			if (response.ok) {
 				// After successful update, refresh cart items and total
 				await Promise.all([fetchCartItems(token), fetchCartTotal(token)]);
+				toast({
+					title: 'Cart Updated',
+					description: 'Item quantity has been updated.',
+				});
 			} else {
 				console.error('Failed to update cart item quantity');
+				toast({
+					title: 'Error',
+					description: 'Failed to update item quantity.',
+					variant: 'destructive',
+				});
 			}
 		} catch (error) {
 			console.error('Error updating cart item quantity:', error);
+			toast({
+				title: 'Error',
+				description: 'An unexpected error occurred while updating quantity.',
+				variant: 'destructive',
+			});
 		}
 	};
 
@@ -174,7 +216,9 @@ export default function CartPage() {
 	) => {
 		if (currentQuantity > 1) {
 			const newQuantity = currentQuantity - 1;
+			setIsProcessing(true);
 			await updateCartItemQuantity(productId, newQuantity);
+			setIsProcessing(false);
 		}
 	};
 
@@ -183,7 +227,9 @@ export default function CartPage() {
 		currentQuantity: number
 	) => {
 		const newQuantity = currentQuantity + 1;
+		setIsProcessing(true);
 		await updateCartItemQuantity(productId, newQuantity);
+		setIsProcessing(false);
 	};
 
 	const handleRemoveItem = async (productId: number) => {
@@ -191,6 +237,7 @@ export default function CartPage() {
 			router.push('/sign-in');
 			return;
 		}
+		setIsProcessing(true);
 		try {
 			const response = await fetch(`${API_HOST_BASE_URL}/cart/${productId}`, {
 				method: 'DELETE',
@@ -202,19 +249,33 @@ export default function CartPage() {
 			if (response.ok) {
 				// After successful removal, refresh cart items and total
 				await Promise.all([fetchCartItems(token), fetchCartTotal(token)]);
+				toast({
+					title: 'Item Removed',
+					description: 'The item has been removed from your cart.',
+				});
 			} else {
 				console.error('Failed to remove cart item');
+				toast({
+					title: 'Error',
+					description: 'Failed to remove the item from your cart.',
+					variant: 'destructive',
+				});
 			}
 		} catch (error) {
 			console.error('Error removing cart item:', error);
+			toast({
+				title: 'Error',
+				description: 'An unexpected error occurred while removing the item.',
+				variant: 'destructive',
+			});
 		} finally {
 			setItemToRemove(null); // Close the dialog
+			setIsProcessing(false);
 		}
 	};
 
-	const handleCheckout = () => {
-		// Implement your checkout logic here
-		console.log('Proceeding to payment...');
+	const handleProceedToPayment = () => {
+		router.push('/payment');
 	};
 
 	if (loading) {
@@ -222,6 +283,8 @@ export default function CartPage() {
 	}
 
 	const total = cartTotal ? cartTotal.total : 0;
+	const tax = cartTotal ? cartTotal.tax : 0;
+	const grandTotal = cartTotal ? cartTotal.grand_total : 0;
 
 	return (
 		<div className="container mx-auto py-10">
@@ -273,7 +336,7 @@ export default function CartPage() {
 																	? 'cursor-not-allowed opacity-50'
 																	: ''
 															}`}
-															disabled={quantity === 1}
+															disabled={quantity === 1 || isProcessing}
 														>
 															-
 														</button>
@@ -283,6 +346,7 @@ export default function CartPage() {
 																handleIncreaseQuantity(productId, quantity)
 															}
 															className="px-2 py-1 bg-green-600 text-white rounded-r"
+															disabled={isProcessing}
 														>
 															+
 														</button>
@@ -292,6 +356,7 @@ export default function CartPage() {
 													<button
 														onClick={() => setItemToRemove(productId)}
 														className="px-2 py-1 bg-red-600 text-white rounded-md hover:bg-red-700"
+														disabled={isProcessing}
 													>
 														Remove
 													</button>
@@ -306,28 +371,25 @@ export default function CartPage() {
 							</Table>
 							<Separator className="my-4" />
 							<div className="flex justify-between items-center font-semibold text-lg">
-								<span>Total</span>
+								<span>Subtotal</span>
 								<span>${total.toFixed(2)}</span>
 							</div>
-							{cartTotal && (
-								<>
-									<div className="flex justify-between items-center font-semibold text-lg">
-										<span>Tax</span>
-										<span>${cartTotal.tax.toFixed(2)}</span>
-									</div>
-									<div className="flex justify-between items-center font-bold text-xl">
-										<span>Grand Total</span>
-										<span>${cartTotal.grand_total.toFixed(2)}</span>
-									</div>
-								</>
-							)}
+							<div className="flex justify-between items-center font-semibold text-lg">
+								<span>Tax</span>
+								<span>${tax.toFixed(2)}</span>
+							</div>
+							<div className="flex justify-between items-center font-bold text-xl">
+								<span>Grand Total</span>
+								<span>${grandTotal.toFixed(2)}</span>
+							</div>
 						</>
 					)}
 				</CardContent>
 				<CardFooter>
 					<Button
-						onClick={handleCheckout}
+						onClick={handleProceedToPayment}
 						className="w-full"
+						disabled={cartItems.length === 0 || isProcessing}
 					>
 						Proceed to Payment
 					</Button>

@@ -213,8 +213,7 @@ export default function CartPage() {
 	};
 
 	const handleCheckout = () => {
-		// Implement your checkout logic here
-		console.log('Proceeding to payment...');
+		router.push('/payment');
 	};
 
 	if (loading) {

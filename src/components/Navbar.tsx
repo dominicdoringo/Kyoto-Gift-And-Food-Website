@@ -28,8 +28,8 @@ const navList = [
 		link: '/about',
 	},
 	{
-		label: 'Support',
-		link: '/support',
+		label: 'Cart',
+		link: '/cart',
 	},
 ];
 
