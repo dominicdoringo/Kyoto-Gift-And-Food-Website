@@ -2,7 +2,7 @@
 
 'use client';
 
-import { Home, Package, Heart, Settings, LogOut } from 'lucide-react';
+import { Package, LogOut, UserRoundPenIcon, LockKeyhole } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 
@@ -21,7 +21,12 @@ import { useToast } from '@/hooks/use-toast';
 
 const menuItems = [
 	{ icon: Package, label: 'Orders', href: '/user' },
-	{ icon: Settings, label: 'Settings', href: '/user/settings' },
+	{
+		icon: UserRoundPenIcon,
+		label: 'Change Username and Email',
+		href: '/user/settings',
+	},
+	{ icon: LockKeyhole, label: 'Change Password', href: '/user/password' },
 ];
 
 interface UserSidebarProps {
