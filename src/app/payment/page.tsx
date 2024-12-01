@@ -1,3 +1,5 @@
+// src/app/payment/page.tsx
+
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -62,6 +64,9 @@ export default function PaymentPage() {
 	const [cartTotal, setCartTotal] = useState<CartTotal | null>(null);
 	const [loading, setLoading] = useState<boolean>(true);
 	const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+	const [discountCode, setDiscountCode] = useState<string>('');
+	const [discountApplied, setDiscountApplied] = useState<boolean>(false);
+	const [discountAmount, setDiscountAmount] = useState<number>(0);
 
 	// Image mapping (same as in cart/page.tsx)
 	const imageMap: { [key: string]: string } = {
@@ -154,6 +159,70 @@ export default function PaymentPage() {
 
 		fetchData();
 	}, [isLoggedIn, router, toast]);
+
+	const handleApplyDiscount = async (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+
+		if (!discountCode) {
+			toast({
+				title: 'Discount Code Required',
+				description: 'Please enter a discount code.',
+				variant: 'destructive',
+			});
+			return;
+		}
+
+		const accessToken = localStorage.getItem('accessToken');
+		if (!accessToken) {
+			router.push('/sign-in');
+			return;
+		}
+
+		try {
+			const response = await fetch(`${API_HOST_BASE_URL}/cart/discount`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${accessToken}`,
+				},
+				body: JSON.stringify({
+					discount_code: discountCode,
+				}),
+			});
+
+			if (response.ok) {
+				const data = await response.json();
+				setDiscountApplied(true);
+				setDiscountAmount(data.discount_applied);
+				// Update cart total with new_total from the response
+				if (cartTotal) {
+					setCartTotal({
+						...cartTotal,
+						total: data.new_total,
+						grand_total: data.new_total + cartTotal.tax,
+					});
+				}
+				toast({
+					title: 'Discount Applied',
+					description: data.message,
+				});
+			} else {
+				const errorData = await response.json();
+				toast({
+					title: 'Discount Failed',
+					description: errorData.detail || 'Invalid discount code.',
+					variant: 'destructive',
+				});
+			}
+		} catch (error) {
+			console.error('Error applying discount:', error);
+			toast({
+				title: 'Error',
+				description: 'An unexpected error occurred while applying discount.',
+				variant: 'destructive',
+			});
+		}
+	};
 
 	const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
@@ -269,6 +338,25 @@ export default function PaymentPage() {
 									</TableBody>
 								</Table>
 								<Separator className="my-4" />
+								<form
+									onSubmit={handleApplyDiscount}
+									className="flex items-center space-x-4 mb-4"
+								>
+									<Input
+										type="text"
+										placeholder="Discount Code"
+										value={discountCode}
+										onChange={(e) => setDiscountCode(e.target.value)}
+										className="flex-grow"
+									/>
+									<Button type="submit">Apply</Button>
+								</form>
+								{discountApplied && (
+									<div className="flex justify-between text-green-600">
+										<span>Discount Applied:</span>
+										<span>- ${discountAmount.toFixed(2)}</span>
+									</div>
+								)}
 								<div className="flex justify-between">
 									<span>Subtotal:</span>
 									<span>${total.toFixed(2)}</span>

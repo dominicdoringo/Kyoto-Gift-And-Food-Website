@@ -20,9 +20,7 @@ import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 
 const menuItems = [
-	{ icon: Home, label: 'Dashboard', href: '/user' },
-	{ icon: Package, label: 'Orders', href: '/user/orders' },
-	{ icon: Heart, label: 'Saved Items', href: '/user/saved' },
+	{ icon: Package, label: 'Orders', href: '/user' },
 	{ icon: Settings, label: 'Settings', href: '/user/settings' },
 ];
 

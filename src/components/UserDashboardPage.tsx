@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { UserSidebar } from '@/components/user-sidebar';
 import { AdminSidebar } from '@/components/admin-sidebar';
-import { UserDashboard } from '@/components/user-dashboard';
+import UserDashboard from '@/components/user-dashboard';
 import { AdminDashboard } from '@/components/admin-dashboard';
 import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
 import { useAuth } from '@/context/AuthContext';
