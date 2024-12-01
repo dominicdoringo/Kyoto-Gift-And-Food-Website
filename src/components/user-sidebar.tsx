@@ -2,7 +2,13 @@
 
 'use client';
 
-import { Package, LogOut, UserRoundPenIcon, LockKeyhole } from 'lucide-react';
+import {
+	Package,
+	LogOut,
+	UserRoundPenIcon,
+	LockKeyhole,
+	UserX,
+} from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 
@@ -27,6 +33,7 @@ const menuItems = [
 		href: '/user/settings',
 	},
 	{ icon: LockKeyhole, label: 'Change Password', href: '/user/password' },
+	{ icon: UserX, label: 'Delete Account', href: '/user/delete' },
 ];
 
 interface UserSidebarProps {

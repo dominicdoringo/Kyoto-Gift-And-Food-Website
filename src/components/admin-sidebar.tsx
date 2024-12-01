@@ -18,7 +18,7 @@ import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 
 const adminMenuItems = [
-	{ icon: Home, label: 'Dashboard', href: '/admin' },
+	{ icon: Home, label: 'Dashboard', href: '/user' },
 	{ icon: Users, label: 'List All Users', href: '/admin/users' },
 	{ icon: PencilLine, label: 'List All Products', href: '/admin/products' },
 	{ icon: Plus, label: 'Add New Product', href: '/admin/products/add' },
