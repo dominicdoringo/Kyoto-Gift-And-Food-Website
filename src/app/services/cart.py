@@ -1,7 +1,10 @@
+# app/services/cart.py
+
 from sqlalchemy.orm import Session, joinedload
 from fastapi import HTTPException
+from typing import List
 
-from app.models.cart import CartItem
+from app.models.cart import CartItem as CartItemModel
 from app.models.product import Product
 from app.schemas.cart import (
     CartItemCreate,
@@ -12,17 +15,18 @@ from app.schemas.cart import (
     CartDiscountResponse,
     CartItemDetail,
 )
+from app.schemas.product import ProductBase  # Ensure ProductBase is used correctly
 
-def get_cart_items(db: Session, user_id: int):
+def get_cart_items(db: Session, user_id: int) -> List[CartItemModel]:
     cart_items = (
-        db.query(CartItem)
-        .options(joinedload(CartItem.product))
-        .filter(CartItem.user_id == user_id)
+        db.query(CartItemModel)
+        .options(joinedload(CartItemModel.product))
+        .filter(CartItemModel.user_id == user_id)
         .all()
     )
     return cart_items
 
-def add_cart_item(db: Session, user_id: int, item: CartItemCreate):
+def add_cart_item(db: Session, user_id: int, item: CartItemCreate) -> CartItemModel:
     if item.quantity <= 0:
         raise HTTPException(status_code=422, detail="Quantity must be greater than zero")
 
@@ -32,15 +36,15 @@ def add_cart_item(db: Session, user_id: int, item: CartItemCreate):
     if product.stock < item.quantity:
         raise HTTPException(status_code=400, detail="Insufficient stock")
 
-    cart_item = db.query(CartItem).filter(
-        CartItem.user_id == user_id,
-        CartItem.product_id == item.product_id
+    cart_item = db.query(CartItemModel).filter(
+        CartItemModel.user_id == user_id,
+        CartItemModel.product_id == item.product_id
     ).first()
 
     if cart_item:
         cart_item.quantity += item.quantity
     else:
-        cart_item = CartItem(
+        cart_item = CartItemModel(
             user_id=user_id,
             product_id=item.product_id,
             quantity=item.quantity
@@ -52,13 +56,13 @@ def add_cart_item(db: Session, user_id: int, item: CartItemCreate):
     db.refresh(cart_item)
     return cart_item
 
-def update_cart_item(db: Session, user_id: int, product_id: int, item: CartItemUpdate):
+def update_cart_item(db: Session, user_id: int, product_id: int, item: CartItemUpdate) -> CartItemModel:
     if item.quantity <= 0:
         raise HTTPException(status_code=422, detail="Quantity must be greater than zero")
 
-    cart_item = db.query(CartItem).filter(
-        CartItem.user_id == user_id,
-        CartItem.product_id == product_id
+    cart_item = db.query(CartItemModel).filter(
+        CartItemModel.user_id == user_id,
+        CartItemModel.product_id == product_id
     ).first()
 
     if not cart_item:
@@ -80,10 +84,10 @@ def update_cart_item(db: Session, user_id: int, product_id: int, item: CartItemU
     db.refresh(cart_item)
     return cart_item
 
-def remove_cart_item(db: Session, user_id: int, product_id: int):
-    cart_item = db.query(CartItem).filter(
-        CartItem.user_id == user_id,
-        CartItem.product_id == product_id
+def remove_cart_item(db: Session, user_id: int, product_id: int) -> CartRemoveResponse:
+    cart_item = db.query(CartItemModel).filter(
+        CartItemModel.user_id == user_id,
+        CartItemModel.product_id == product_id
     ).first()
 
     if not cart_item:
@@ -97,8 +101,8 @@ def remove_cart_item(db: Session, user_id: int, product_id: int):
     db.commit()
     return CartRemoveResponse(success=True, message="Item removed from cart successfully")
 
-def clear_cart(db: Session, user_id: int):
-    cart_items = db.query(CartItem).filter(CartItem.user_id == user_id).all()
+def clear_cart(db: Session, user_id: int) -> CartClearResponse:
+    cart_items = db.query(CartItemModel).filter(CartItemModel.user_id == user_id).all()
     for item in cart_items:
         product = db.query(Product).filter(Product.id == item.product_id).first()
         if product:
@@ -107,11 +111,11 @@ def clear_cart(db: Session, user_id: int):
     db.commit()
     return CartClearResponse(success=True, message="Cart cleared successfully")
 
-def get_cart_total(db: Session, user_id: int, tax_rate: float = 0.08):
+def get_cart_total(db: Session, user_id: int, tax_rate: float = 0.08) -> CartTotalResponse:
     cart_items = (
-        db.query(CartItem)
-        .options(joinedload(CartItem.product))
-        .filter(CartItem.user_id == user_id)
+        db.query(CartItemModel)
+        .options(joinedload(CartItemModel.product))
+        .filter(CartItemModel.user_id == user_id)
         .all()
     )
     total = 0.0
@@ -128,7 +132,8 @@ def get_cart_total(db: Session, user_id: int, tax_rate: float = 0.08):
                 "product_name": item.product.name,
                 "quantity": item.quantity,
                 "price": item.product.price,
-                "subtotal": item_total
+                "subtotal": item_total,
+                "imageUrl": item.product.imageUrl  # Include imageUrl here
             })
 
     # Calculate tax
@@ -145,7 +150,7 @@ def get_cart_total(db: Session, user_id: int, tax_rate: float = 0.08):
         grand_total=grand_total
     )
 
-def apply_discount(db: Session, user_id: int, discount_code: str):
+def apply_discount(db: Session, user_id: int, discount_code: str) -> CartDiscountResponse:
     cart_total = get_cart_total(db, user_id)
     
     # For simplicity, let's assume a flat 10% discount for a valid code 'SAVE10'
@@ -162,4 +167,3 @@ def apply_discount(db: Session, user_id: int, discount_code: str):
         )
     else:
         raise HTTPException(status_code=400, detail="Invalid discount code")
-

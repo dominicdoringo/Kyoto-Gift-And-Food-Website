@@ -31,6 +31,7 @@ def create_product(db: Session, product: ProductCreate):
         category=product.category,
         stock=product.stock,
         featured=product.featured,
+        imageUrl=product.imageUrl
     )
     db.add(db_product)
     db.commit()

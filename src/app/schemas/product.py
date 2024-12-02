@@ -10,6 +10,7 @@ class ProductBase(BaseModel):
     category: str
     stock: int
     featured: bool = False
+    imageUrl: str
 
 
 class ProductCreate(ProductBase):
@@ -23,6 +24,7 @@ class ProductUpdate(BaseModel):
     category: str | None = None
     stock: int | None = None
     featured: bool | None = None
+    imageUrl: str | None = None
 
 
 class Product(BaseModel):
@@ -34,6 +36,7 @@ class Product(BaseModel):
     stock: int
     featured: bool
     created_at: datetime
+    imageUrl: str
 
     class Config:
         from_attributes = True

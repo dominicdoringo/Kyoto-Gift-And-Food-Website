@@ -18,6 +18,7 @@ class Product(Base):
     stock = Column(Integer, nullable=False)
     featured = Column(Boolean, default=False, nullable=False)
     created_at = Column(DateTime, default=datetime.now(timezone.utc))
+    imageUrl = Column(String, nullable=False)
 
     # Relationship to CartItems
     cart_items = relationship("CartItem", back_populates="product", cascade="all, delete-orphan")

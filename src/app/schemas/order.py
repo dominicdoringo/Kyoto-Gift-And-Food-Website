@@ -1,7 +1,9 @@
+# app/schemas/order.py
+
 from datetime import datetime
 from typing import List, Optional
-
 from pydantic import BaseModel
+from app.schemas.product import ProductBase  # Import ProductBase to include imageUrl
 
 
 class OrderItemBase(BaseModel):
@@ -12,21 +14,20 @@ class OrderItemBase(BaseModel):
     tax: float       # Added field
 
 
-class ProductInOrderItem(BaseModel):
+class ProductInOrderItem(ProductBase):
     id: int
-    name: str
-    description: Optional[str]
-    price: float
 
     class Config:
         orm_mode = True
+
 
 class OrderItem(OrderItemBase):
     id: int
-    product: ProductInOrderItem  # Include product details
+    product: ProductInOrderItem  # Include product details with imageUrl
 
     class Config:
         orm_mode = True
+
 
 class OrderBase(BaseModel):
     payment_method: str
@@ -55,6 +56,7 @@ class Order(BaseModel):
 
     class Config:
         orm_mode = True
+
 
 class OrderCreateResponse(BaseModel):
     success: bool

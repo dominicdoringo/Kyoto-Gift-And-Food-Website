@@ -1,6 +1,10 @@
-from sqlalchemy.orm import Session
+# app/services/order.py
+
+from sqlalchemy.orm import Session, joinedload
 from fastapi import HTTPException
-from sqlalchemy.orm import Session, joinedload 
+from typing import List
+from decimal import Decimal, ROUND_HALF_UP, getcontext
+
 from app.models.order import Order, OrderItem
 from app.models.product import Product
 from app.schemas.order import (
@@ -11,13 +15,12 @@ from app.schemas.order import (
 from app.services.cart import get_cart_items, clear_cart
 from app.services.reward import calculate_reward_points, update_reward_points
 
-from decimal import Decimal, ROUND_HALF_UP, getcontext
-
 # Set the precision and rounding
 getcontext().prec = 28
 getcontext().rounding = ROUND_HALF_UP
 
-def create_order(db: Session, user_id: int, order: OrderCreate, tax_rate: float = 0.08):
+
+def create_order(db: Session, user_id: int, order: OrderCreate, tax_rate: float = 0.08) -> Order:
     try:
         # Fetch cart items for the current user
         cart_items = get_cart_items(db, user_id)
@@ -92,12 +95,10 @@ def create_order(db: Session, user_id: int, order: OrderCreate, tax_rate: float 
         raise e
 
 
-
-
-def get_order(db: Session, user_id: int, order_id: int):
+def get_order(db: Session, user_id: int, order_id: int) -> Order:
     order = (
         db.query(Order)
-        .options(joinedload(Order.items))
+        .options(joinedload(Order.items).joinedload(OrderItem.product))
         .filter(Order.id == order_id, Order.user_id == user_id)
         .first()
     )
@@ -106,7 +107,7 @@ def get_order(db: Session, user_id: int, order_id: int):
     return order
 
 
-def get_orders(db: Session, user_id: int, skip: int = 0, limit: int = 100):
+def get_orders(db: Session, user_id: int, skip: int = 0, limit: int = 100) -> List[Order]:
     orders = (
         db.query(Order)
         .options(joinedload(Order.items).joinedload(OrderItem.product))
@@ -117,7 +118,8 @@ def get_orders(db: Session, user_id: int, skip: int = 0, limit: int = 100):
     )
     return orders
 
-def update_order(db: Session, user_id: int, order_id: int, order_update: OrderUpdate):
+
+def update_order(db: Session, user_id: int, order_id: int, order_update: OrderUpdate) -> Order:
     db_order = (
         db.query(Order)
         .filter(Order.id == order_id, Order.user_id == user_id)
@@ -151,7 +153,7 @@ def delete_order(db: Session, user_id: int, order_id: int):
     return {"detail": "Order deleted successfully"}
 
 
-def get_order_status_history(db: Session, user_id: int, order_id: int):
+def get_order_status_history(db: Session, user_id: int, order_id: int) -> List[OrderStatusHistory]:
     db_order = (
         db.query(Order)
         .filter(Order.id == order_id, Order.user_id == user_id)
