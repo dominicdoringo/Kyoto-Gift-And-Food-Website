@@ -1,3 +1,4 @@
+# services/reward.py
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
 
@@ -8,16 +9,18 @@ from app.schemas.reward import (
     RewardUpdate,
     RewardRedeemRequest,
 )
+from typing import Dict
 
-def create_reward(db: Session, reward: RewardCreate):
-    user = db.query(User).filter(User.id == reward.user_id).first()
+
+def create_reward(db: Session, user_id: int, reward: RewardCreate):
+    user = db.query(User).filter(User.id == user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     if user.reward:
         raise HTTPException(status_code=400, detail="User is already enrolled in the rewards program")
 
     db_reward = Reward(
-        user_id=reward.user_id,
+        user_id=user_id,
         reward_tier=reward.reward_tier,
         points=reward.points,
     )
@@ -26,16 +29,19 @@ def create_reward(db: Session, reward: RewardCreate):
     db.refresh(db_reward)
     return db_reward
 
+
 def get_reward(db: Session, user_id: int):
     reward = db.query(Reward).filter(Reward.user_id == user_id).first()
     if not reward:
         raise HTTPException(status_code=404, detail="Rewards not found")
     return reward
 
+
 def calculate_reward_points(total_amount: float) -> int:
     # Example: 1 point per $1 spent
     points = int(total_amount // 1)
     return points
+
 
 def update_reward_points(db: Session, user_id: int, points: int):
     reward = db.query(Reward).filter(Reward.user_id == user_id).first()
@@ -44,16 +50,17 @@ def update_reward_points(db: Session, user_id: int, points: int):
     reward.points += points
 
     # Example tier upgrade logic
-    if reward.points >= 50 and reward.reward_tier != "Gold":
+    if reward.points >= 45 and reward.reward_tier != "Gold":
         reward.reward_tier = "Gold"
-    elif reward.points >= 20 and reward.reward_tier != "Silver":
+    elif reward.points >= 1 and reward.reward_tier != "Silver":
         reward.reward_tier = "Silver"
 
     db.commit()
     db.refresh(reward)
     return reward
 
-def cancel_reward_membership(db: Session, user_id: int):
+
+def cancel_reward_membership(db: Session, user_id: int) -> Dict[str, bool]:
     reward = db.query(Reward).filter(Reward.user_id == user_id).first()
     if not reward:
         raise HTTPException(status_code=404, detail="Rewards not found")
@@ -61,7 +68,8 @@ def cancel_reward_membership(db: Session, user_id: int):
     db.commit()
     return {"success": True, "message": "Rewards membership canceled successfully"}
 
-def redeem_reward_points(db: Session, user_id: int, points: int):
+
+def redeem_reward_points(db: Session, user_id: int, points: int) -> Dict[str, bool]:
     reward = db.query(Reward).filter(Reward.user_id == user_id).first()
     if not reward:
         raise HTTPException(status_code=404, detail="Rewards not found")
