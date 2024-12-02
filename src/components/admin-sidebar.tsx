@@ -22,7 +22,6 @@ const adminMenuItems = [
 	{ icon: Users, label: 'List All Users', href: '/admin/users' },
 	{ icon: PencilLine, label: 'List All Products', href: '/admin/products' },
 	{ icon: Plus, label: 'Add New Product', href: '/admin/products/add' },
-	{ icon: Settings, label: 'Settings', href: '/admin/settings' },
 ];
 
 interface AdminSidebarProps {
