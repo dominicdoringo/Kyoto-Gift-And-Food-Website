@@ -22,17 +22,6 @@ export function FeaturedItems() {
 	const [featuredItems, setFeaturedItems] = useState<Product[]>([]);
 	const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-	const imageMap: { [key: string]: string } = {
-		Coke: 'https://m.media-amazon.com/images/I/714++YLlgwL._AC_UF894,1000_QL80_.jpg',
-		'Pocky Chocolate': 'https://m.media-amazon.com/images/I/81UAcnIvi5L.jpg',
-		'Matcha KitKat': 'https://m.media-amazon.com/images/I/81co+3MgqlL.jpg',
-		'Ramune Soda':
-			'https://m.media-amazon.com/images/I/81fDajWWbkL._AC_UF894,1000_QL80_.jpg',
-		'Mochi Ice Cream': 'https://m.media-amazon.com/images/I/81ix0M-Bk3L.jpg',
-		'Hawaiian Sun': 'https://m.media-amazon.com/images/I/81qnbcdAFoL.jpg',
-		'Shin Instant Ramen': 'https://m.media-amazon.com/images/I/81kFdSChhKL.jpg',
-	};
-
 	useEffect(() => {
 		const fetchFeaturedItems = async () => {
 			try {
@@ -43,7 +32,9 @@ export function FeaturedItems() {
 					const data: Product[] = await response.json();
 					const productsWithImages = data.map((product) => ({
 						...product,
-						imageUrl: imageMap[product.name] || '/default-image.png', // Provide a fallback image
+						imageUrl:
+							product.imageUrl ||
+							'https://m.media-amazon.com/images/I/91gJhDXaehL._AC_UF894,1000_QL80_.jpg', // Use imageUrl from backend or fallback
 					}));
 					setFeaturedItems(productsWithImages);
 				} else {
@@ -89,7 +80,7 @@ export function FeaturedItems() {
 								name={item.name}
 								price={item.price}
 								description={item.description || ''}
-								imageUrl={item.imageUrl || '/default-image.png'}
+								imageUrl={item.imageUrl} // Directly use imageUrl from backend
 							/>
 						))}
 					</div>

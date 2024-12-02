@@ -13,6 +13,7 @@ interface Product {
 	stock: number;
 	featured: boolean;
 	created_at: string;
+	imageUrl: string;
 }
 
 interface ProductsTableProps {
@@ -46,11 +47,15 @@ export function ProductsTable({
 						<th className="py-2 px-4 border-b text-left text-gray-700 dark:text-gray-200">
 							Stock
 						</th>
+
 						<th className="py-2 px-4 border-b text-left text-gray-700 dark:text-gray-200">
 							Featured
 						</th>
 						<th className="py-2 px-4 border-b text-left text-gray-700 dark:text-gray-200">
 							Created At
+						</th>
+						<th className="py-2 px-4 border-b text-left text-gray-700 dark:text-gray-200">
+							imageUrl
 						</th>
 						<th className="py-2 px-4 border-b text-left text-gray-700 dark:text-gray-200">
 							Actions
@@ -83,6 +88,9 @@ export function ProductsTable({
 							</td>
 							<td className="py-2 px-4 border-b text-gray-900 dark:text-gray-100">
 								{new Date(product.created_at).toLocaleDateString()}
+							</td>
+							<td className="py-2 px-4 border-b text-gray-900 dark:text-gray-100">
+								{product.imageUrl}
 							</td>
 							<td className="py-2 px-4 border-b text-gray-900 dark:text-gray-100">
 								<button

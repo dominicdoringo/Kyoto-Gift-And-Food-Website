@@ -19,6 +19,7 @@ interface Product {
 	stock: number;
 	featured: boolean;
 	created_at: string;
+	imageUrl: string;
 }
 
 interface UserData {
@@ -141,6 +142,7 @@ export default function EditProductPage({ productId }: { productId: string }) {
 						category: product.category,
 						stock: parseInt(product.stock.toString()),
 						featured: product.featured,
+						imageUrl: product.imageUrl,
 					}),
 				}
 			);
@@ -237,6 +239,16 @@ export default function EditProductPage({ productId }: { productId: string }) {
 									onChange={handleInputChange}
 									className="mt-1 block w-full border border-gray-300 rounded-md p-2"
 									required
+								/>
+							</div>
+							<div>
+								<label className="block text-sm font-medium">Image URL</label>
+								<input
+									type="text"
+									name="imageUrl"
+									value={product.imageUrl}
+									onChange={handleInputChange}
+									className="mt-1 block w-full border border-gray-300 rounded-md p-2"
 								/>
 							</div>
 							<div className="flex items-center">

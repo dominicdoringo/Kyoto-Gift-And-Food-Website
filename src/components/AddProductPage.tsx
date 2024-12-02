@@ -18,6 +18,7 @@ export default function AddProductPage() {
 		category: '',
 		stock: '',
 		featured: false,
+		imageUrl: '',
 	});
 	const [submitting, setSubmitting] = useState(false);
 	const { isLoggedIn, isAdmin } = useAuth();
@@ -45,7 +46,8 @@ export default function AddProductPage() {
 			!formData.name ||
 			!formData.price ||
 			!formData.category ||
-			!formData.stock
+			!formData.stock ||
+			!formData.imageUrl
 		) {
 			toast({
 				title: 'Validation Error',
@@ -81,6 +83,7 @@ export default function AddProductPage() {
 					category: formData.category,
 					stock: parseInt(formData.stock, 10),
 					featured: formData.featured,
+					imageUrl: formData.imageUrl,
 				}),
 			});
 
@@ -173,6 +176,17 @@ export default function AddProductPage() {
 									type="number"
 									name="stock"
 									value={formData.stock}
+									onChange={handleChange}
+									className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+									required
+								/>
+							</div>
+							<div>
+								<label className="block text-sm font-medium">Image URL *</label>
+								<input
+									type="text"
+									name="imageUrl"
+									value={formData.imageUrl}
 									onChange={handleChange}
 									className="mt-1 block w-full border border-gray-300 rounded-md p-2"
 									required

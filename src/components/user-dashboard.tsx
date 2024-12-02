@@ -31,6 +31,7 @@ interface OrderItem {
 		name: string;
 		description?: string;
 		price: number;
+		imageUrl: string; // Added imageUrl
 	};
 }
 
@@ -53,18 +54,6 @@ export default function UserDashboard() {
 
 	const [orders, setOrders] = useState<Order[]>([]);
 	const [loading, setLoading] = useState<boolean>(true);
-
-	const imageMap: { [key: string]: string } = {
-		'Pocky Chocolate': 'https://m.media-amazon.com/images/I/81UAcnIvi5L.jpg',
-		'Matcha KitKat': 'https://m.media-amazon.com/images/I/81co+3MgqlL.jpg',
-		'Ramune Soda':
-			'https://m.media-amazon.com/images/I/81fDajWWbkL._AC_UF894,1000_QL80_.jpg',
-		'Mochi Ice Cream': 'https://m.media-amazon.com/images/I/81ix0M-Bk3L.jpg',
-		'Hawaiian Sun': 'https://m.media-amazon.com/images/I/81qnbcdAFoL.jpg',
-		'Shin Instant Ramen': 'https://m.media-amazon.com/images/I/81kFdSChhKL.jpg',
-		Coke: 'https://m.media-amazon.com/images/I/714++YLlgwL._AC_UF894,1000_QL80_.jpg',
-		// Add more mappings as needed
-	};
 
 	useEffect(() => {
 		if (!isLoggedIn) {
@@ -155,8 +144,7 @@ export default function UserDashboard() {
 								<TableBody>
 									{order.items.map((item) => {
 										const { product } = item;
-										const imageUrl =
-											imageMap[product.name] || '/default-image.png';
+										const imageUrl = product.imageUrl || '/default-image.png';
 
 										return (
 											<TableRow

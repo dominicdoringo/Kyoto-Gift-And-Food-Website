@@ -20,6 +20,7 @@ interface Product {
 	stock: number;
 	featured: boolean;
 	created_at: string;
+	imageUrl: string;
 }
 
 interface UserData {

@@ -28,7 +28,18 @@ import {
 } from '@/components/ui/table';
 import Image from 'next/image';
 import { Separator } from '@/components/ui/separator';
+import {
+	AlertDialog,
+	AlertDialogAction,
+	AlertDialogCancel,
+	AlertDialogContent,
+	AlertDialogDescription,
+	AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogTitle,
+} from '@/components/ui/alert-dialog'; // Import AlertDialog components
 
+// **Updated Interfaces**
 interface CartItem {
 	id: number;
 	quantity: number;
@@ -37,6 +48,7 @@ interface CartItem {
 		name: string;
 		description?: string;
 		price: number;
+		imageUrl: string; // Added imageUrl
 	};
 }
 
@@ -49,6 +61,7 @@ interface CartTotal {
 		quantity: number;
 		price: number;
 		subtotal: number;
+		imageUrl: string; // Added imageUrl if needed in CartTotal
 	}[];
 	tax: number;
 	grand_total: number;
@@ -68,17 +81,8 @@ export default function PaymentPage() {
 	const [discountApplied, setDiscountApplied] = useState<boolean>(false);
 	const [discountAmount, setDiscountAmount] = useState<number>(0);
 
-	// Image mapping (same as in cart/page.tsx)
-	const imageMap: { [key: string]: string } = {
-		'Pocky Chocolate': 'https://m.media-amazon.com/images/I/81UAcnIvi5L.jpg',
-		'Matcha KitKat': 'https://m.media-amazon.com/images/I/81co+3MgqlL.jpg',
-		'Ramune Soda':
-			'https://m.media-amazon.com/images/I/81fDajWWbkL._AC_UF894,1000_QL80_.jpg',
-		'Mochi Ice Cream': 'https://m.media-amazon.com/images/I/81ix0M-Bk3L.jpg',
-		'Hawaiian Sun': 'https://m.media-amazon.com/images/I/81qnbcdAFoL.jpg',
-		'Shin Instant Ramen': 'https://m.media-amazon.com/images/I/81kFdSChhKL.jpg',
-		Coke: 'https://m.media-amazon.com/images/I/714++YLlgwL._AC_UF894,1000_QL80_.jpg',
-	};
+	// **Removed imageMap**
+	// The imageMap is no longer needed since imageUrl is fetched from the API
 
 	useEffect(() => {
 		if (!isLoggedIn) {
@@ -313,18 +317,17 @@ export default function PaymentPage() {
 									<TableBody>
 										{cartItems.map((item) => {
 											const { product, quantity } = item;
-											const { id: productId, name, price } = product;
-											const imageUrl = imageMap[name] || '/default-image.png';
+											const { id: productId, name, price, imageUrl } = product;
 
 											return (
 												<TableRow key={productId}>
 													<TableCell>
 														<Image
-															src={imageUrl}
+															src={imageUrl || '/default-image.png'} // Use imageUrl from product or fallback
 															alt={name}
 															width={50}
 															height={50}
-															className="rounded-md"
+															className="rounded-md object-cover"
 														/>
 													</TableCell>
 													<TableCell>{name}</TableCell>
