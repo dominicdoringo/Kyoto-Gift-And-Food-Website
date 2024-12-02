@@ -1,10 +1,12 @@
-# src/app/routes/user.py (current)
+# src/app/routes/user.py (updated)
+
 from datetime import datetime, timedelta, timezone
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 
 import app.services.user as user_service
+import app.services.reward as reward_service  # Import reward service
 from app.core.auth import ACCESS_TOKEN_EXPIRE_MINUTES, create_access_token, get_current_user
 from app.dependencies import get_db 
 from app.schemas.token import Token
@@ -26,9 +28,22 @@ router = APIRouter()
 @router.post("/register", response_model=UserCreateResponse, status_code=201)
 def register_user(user: UserCreate, db: Session = Depends(get_db)):
     """
-    Register a new user.
+    Register a new user and enroll them in the rewards program.
     """
-    return user_service.create_user(db=db, user=user)
+    db_user = user_service.create_user(db=db, user=user)
+    
+    # Fetch the reward details for the new user
+    reward = reward_service.get_reward(db, user_id=db_user.id)
+    
+    return {
+        "id": db_user.id,
+        "username": db_user.username,
+        "email": db_user.email,
+        "is_verified": db_user.is_verified,
+        "created_at": db_user.created_at,
+        "reward_tier": reward.reward_tier,
+        "points": reward.points
+    }
 
 @router.post("/token", response_model=Token, tags=["Authentication"])
 async def login_for_access_token(

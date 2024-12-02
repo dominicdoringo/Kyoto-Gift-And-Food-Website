@@ -61,6 +61,7 @@ class OrderCreateResponse(BaseModel):
     order_id: int
     total: float
     status: str
+    reward_points: int
 
     class Config:
         orm_mode = True

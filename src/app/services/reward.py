@@ -1,4 +1,3 @@
-# services/reward.py
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
 
@@ -9,7 +8,6 @@ from app.schemas.reward import (
     RewardUpdate,
     RewardRedeemRequest,
 )
-
 
 def create_reward(db: Session, reward: RewardCreate):
     user = db.query(User).filter(User.id == reward.user_id).first()
@@ -28,23 +26,32 @@ def create_reward(db: Session, reward: RewardCreate):
     db.refresh(db_reward)
     return db_reward
 
-
 def get_reward(db: Session, user_id: int):
     reward = db.query(Reward).filter(Reward.user_id == user_id).first()
     if not reward:
         raise HTTPException(status_code=404, detail="Rewards not found")
     return reward
 
+def calculate_reward_points(total_amount: float) -> int:
+    # Example: 1 point per $1 spent
+    points = int(total_amount // 1)
+    return points
 
 def update_reward_points(db: Session, user_id: int, points: int):
     reward = db.query(Reward).filter(Reward.user_id == user_id).first()
     if not reward:
         raise HTTPException(status_code=404, detail="Rewards not found")
-    reward.points = points
+    reward.points += points
+
+    # Example tier upgrade logic
+    if reward.points >= 50 and reward.reward_tier != "Gold":
+        reward.reward_tier = "Gold"
+    elif reward.points >= 20 and reward.reward_tier != "Silver":
+        reward.reward_tier = "Silver"
+
     db.commit()
     db.refresh(reward)
     return reward
-
 
 def cancel_reward_membership(db: Session, user_id: int):
     reward = db.query(Reward).filter(Reward.user_id == user_id).first()
@@ -53,7 +60,6 @@ def cancel_reward_membership(db: Session, user_id: int):
     db.delete(reward)
     db.commit()
     return {"success": True, "message": "Rewards membership canceled successfully"}
-
 
 def redeem_reward_points(db: Session, user_id: int, points: int):
     reward = db.query(Reward).filter(Reward.user_id == user_id).first()
@@ -65,4 +71,3 @@ def redeem_reward_points(db: Session, user_id: int, points: int):
     db.commit()
     db.refresh(reward)
     return {"success": True, "message": "Points redeemed successfully"}
-#end code

@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from typing import List
 
 import app.services.order as order_service
+import app.services.reward as reward_service
 from app.dependencies import get_db
 from app.schemas.order import (
     OrderCreate,
@@ -17,7 +18,6 @@ from app.models.user import User
 
 router = APIRouter()
 
-
 @router.post("/", response_model=OrderCreateResponse)
 def create_order(
     order: OrderCreate,
@@ -29,11 +29,14 @@ def create_order(
         user_id=current_user.id,
         order=order
     )
+    # Fetch updated reward points
+    reward = reward_service.get_reward(db, current_user.id)
     return {
         "success": True,
         "order_id": db_order.id,
         "total": db_order.total,
         "status": db_order.status,
+        "reward_points": reward.points
     }
 
 

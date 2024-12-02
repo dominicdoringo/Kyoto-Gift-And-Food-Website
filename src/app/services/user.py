@@ -4,11 +4,15 @@ import secrets
 from fastapi import HTTPException
 from passlib.hash import bcrypt
 from sqlalchemy.orm import Session
+from sqlalchemy.exc import SQLAlchemyError
+
 from app.core.config import get_settings
 from app.core.security import verify_password
 from app.models.user import User  # SQLAlchemy model
 from app.schemas.user import UserCreate, UserUpdate, PasswordChangeRequest
 from app.services.email import send_verification_email  # Import the email service
+from app.schemas.reward import RewardCreate  # Import the RewardCreate schema
+import app.services.reward as reward_service  # Import the reward service
 
 settings = get_settings()
 
@@ -25,14 +29,16 @@ def get_user_by_email(db: Session, email: str):
     return db.query(User).filter(User.email == email).first()
 
 
-# Register a new user
 def create_user(db: Session, user: UserCreate):
+    # Check if username or email already exists
     if get_user_by_username(db, user.username) or get_user_by_email(db, user.email):
         raise HTTPException(status_code=400, detail="Username or email already registered")
 
+    # Hash the password and generate verification code
     password_hash = bcrypt.hash(user.password)
     verification_code = secrets.token_urlsafe(32)
 
+    # Create a new User instance
     db_user = User(
         username=user.username,
         email=user.email,
@@ -40,20 +46,36 @@ def create_user(db: Session, user: UserCreate):
         verification_code=verification_code,
     )
 
-    db.add(db_user)
-    db.commit()
-    db.refresh(db_user)
-
-    # Send verification email
     try:
+        # Add and commit the new user to the database
+        db.add(db_user)
+        db.commit()
+        db.refresh(db_user)
+
+        # Automatically enroll the user in the rewards program
+        reward_create = RewardCreate(
+            user_id=db_user.id,
+            reward_tier="Basic",  # Set the default reward tier
+            points=0  # Initialize points to 0
+        )
+        reward_service.create_reward(db=db, reward=reward_create)
+
+        # Send verification email
         send_verification_email(
             to_email=db_user.email,
             username=db_user.username,
             verification_code=db_user.verification_code
         )
+
+    except SQLAlchemyError as e:
+        # Rollback the transaction in case of any database errors
+        db.rollback()
+        raise HTTPException(status_code=500, detail="Failed to create user.")
+
     except HTTPException as e:
-        # Optionally, handle email sending failure (e.g., rollback user creation)
-        raise HTTPException(status_code=500, detail="User created but failed to send verification email.")
+        # Rollback if sending verification email fails
+        db.rollback()
+        raise HTTPException(status_code=500, detail="User created but failed to enroll in rewards program or send verification email.")
 
     return db_user
 

@@ -45,6 +45,9 @@ class UserCreateResponse(BaseModel):
     email: EmailStr
     is_verified: bool
     created_at: datetime
+    reward_tier: str  # New field
+    points: int  # New field
+
 
     class Config:
         orm_mode = True

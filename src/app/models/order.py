@@ -19,6 +19,7 @@ class Order(Base):
     updated_at = Column(DateTime, default=datetime.now(timezone.utc), onupdate=datetime.now(timezone.utc))
     subtotal = Column(Numeric(10, 2), nullable=False)  # Adjust precision and scale as needed
     tax = Column(Numeric(10, 2), nullable=False)
+    
 
     user = relationship("User", back_populates="orders")
     items = relationship("OrderItem", back_populates="order", cascade="all, delete-orphan")
