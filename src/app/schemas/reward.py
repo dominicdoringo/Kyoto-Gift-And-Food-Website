@@ -7,8 +7,12 @@ class RewardBase(BaseModel):
     points: int = 0
 
 
-class RewardCreate(RewardBase):
+class RewardCreate(BaseModel):
     user_id: int
+    reward_tier: str
+    points: int = 0
+
+
 
 
 class RewardUpdate(BaseModel):

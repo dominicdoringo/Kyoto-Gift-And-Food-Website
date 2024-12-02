@@ -44,6 +44,7 @@ def create_user(db: Session, user: UserCreate):
         email=user.email,
         password_hash=password_hash,
         verification_code=verification_code,
+        
     )
 
     try:
@@ -58,7 +59,7 @@ def create_user(db: Session, user: UserCreate):
             reward_tier="Basic",  # Set the default reward tier
             points=0  # Initialize points to 0
         )
-        reward_service.create_reward(db=db, reward=reward_create)
+        reward_service.create_reward(db=db, user_id=db_user.id, reward=reward_create)
 
         # Send verification email
         send_verification_email(
