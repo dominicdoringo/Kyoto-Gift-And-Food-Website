@@ -8,6 +8,7 @@ import {
 	UserRoundPenIcon,
 	LockKeyhole,
 	UserX,
+	Gem,
 } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
@@ -27,6 +28,7 @@ import { useToast } from '@/hooks/use-toast';
 
 const menuItems = [
 	{ icon: Package, label: 'Orders', href: '/user' },
+	{ icon: Gem, label: 'Rewards', href: '/user/reward' },
 	{
 		icon: UserRoundPenIcon,
 		label: 'Change Username and Email',
