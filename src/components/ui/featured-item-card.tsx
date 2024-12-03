@@ -3,14 +3,8 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { API_HOST_BASE_URL } from '@/lib/constants';
-
-interface FeaturedItemProps {
-	id: number;
-	name: string;
-	price: number;
-	description?: string;
-	imageUrl?: string;
-}
+import { Product } from '@/lib/types';
+import Link from 'next/link';
 
 export function FeaturedItemCard({
 	id,
@@ -18,7 +12,7 @@ export function FeaturedItemCard({
 	price,
 	description = 'No description available.',
 	imageUrl = '/default-image.png',
-}: FeaturedItemProps): JSX.Element {
+}: Product): JSX.Element {
 	const { isLoggedIn } = useAuth();
 	const { toast } = useToast();
 	const router = useRouter();
@@ -89,33 +83,38 @@ export function FeaturedItemCard({
 
 	return (
 		<div className="w-72 sm:w-80 md:w-96 bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden flex flex-col">
-			<img
-				src={imageUrl}
-				alt={name}
-				className="w-full h-48 object-cover"
-			/>
-			<div className="flex flex-col flex-1 p-4">
-				<h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
-					{name}
-				</h3>
-				<p className="text-gray-600 dark:text-gray-300 flex-1 mt-2 line-clamp-3">
-					{description}
-				</p>
-				<div className="mt-4">
-					<span className="text-lg font-bold text-gray-900 dark:text-gray-100">
-						${price.toFixed(2)}
-					</span>
+			<Link
+				href={`/product/${id}`}
+				className="flex-grow"
+			>
+				<img
+					src={imageUrl}
+					alt={name}
+					className="w-full h-48 object-cover"
+				/>
+				<div className="flex flex-col flex-1 p-4">
+					<h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
+						{name}
+					</h3>
+					<p className="text-gray-600 dark:text-gray-300 flex-1 mt-2 line-clamp-3">
+						{description}
+					</p>
+					<div className="mt-4">
+						<span className="text-lg font-bold text-gray-900 dark:text-gray-100">
+							${price.toFixed(2)}
+						</span>
+					</div>
+					<button
+						onClick={handleAddToCart}
+						disabled={addingToCart}
+						className={`mt-4 w-full px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors duration-200 ${
+							addingToCart ? 'opacity-50 cursor-not-allowed' : ''
+						}`}
+					>
+						{addingToCart ? 'Adding...' : 'Add to Cart'}
+					</button>
 				</div>
-				<button
-					onClick={handleAddToCart}
-					disabled={addingToCart}
-					className={`mt-4 w-full px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors duration-200 ${
-						addingToCart ? 'opacity-50 cursor-not-allowed' : ''
-					}`}
-				>
-					{addingToCart ? 'Adding...' : 'Add to Cart'}
-				</button>
-			</div>
+			</Link>
 		</div>
 	);
 }

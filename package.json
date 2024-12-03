@@ -3,9 +3,9 @@
 	"version": "0.1.0",
 	"private": true,
 	"scripts": {
-		"dev": "next dev --turbo",
+		"dev": "next dev --turbo -p 8080",
 		"build": "next build",
-		"start": "next start",
+		"start": "next start -p 8080",
 		"lint": "next lint",
 		"prepare": "husky",
 		"pretty": "prettier --write ."
@@ -24,6 +24,7 @@
 		"@radix-ui/react-tabs": "^1.1.1",
 		"@radix-ui/react-toast": "^1.2.2",
 		"@radix-ui/react-tooltip": "^1.1.4",
+		"axios": "^1.7.8",
 		"class-variance-authority": "^0.7.1",
 		"clsx": "^2.1.1",
 		"lucide-react": "^0.460.0",
