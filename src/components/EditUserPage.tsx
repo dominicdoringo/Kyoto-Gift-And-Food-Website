@@ -19,7 +19,12 @@ interface User {
 	// Include other fields as needed
 }
 
-export default function EditUserPage({ userId }: { userId: string }) {
+interface EditUserPageProps {
+	userId: string; // Define the type as string
+}
+
+export default function EditUserPage({ userId }: EditUserPageProps) {
+	// Accept userId as prop
 	const [user, setUser] = useState<User | null>(null);
 	const [loading, setLoading] = useState<boolean>(true);
 	const [userData, setUserData] = useState<any>(null); // For admin sidebar
@@ -36,13 +41,22 @@ export default function EditUserPage({ userId }: { userId: string }) {
 			fetchUserData(); // Fetch admin user data for the sidebar
 			fetchUser(); // Fetch the user to edit
 		}
-	}, [isLoggedIn, isAdmin, router]);
+	}, [isLoggedIn, isAdmin, router, userId]); // Added userId to dependencies
 
 	const fetchUserData = async () => {
-		// Similar to previous fetchUserData implementation
+		// Implement your fetchUserData logic here
 	};
 
 	const fetchUser = async () => {
+		if (!userId) {
+			toast({
+				title: 'Error',
+				description: 'No user ID provided.',
+				variant: 'destructive',
+			});
+			return;
+		}
+
 		const token = localStorage.getItem('accessToken');
 		if (!token) {
 			toast({

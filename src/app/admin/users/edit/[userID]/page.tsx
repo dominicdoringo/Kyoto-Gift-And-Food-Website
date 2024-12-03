@@ -2,6 +2,12 @@
 
 import EditUserPage from '@/components/EditUserPage';
 
-export default function EditUser({ params }: { params: { userId: string } }) {
+interface PageProps {
+	params: {
+		userId: string;
+	};
+}
+
+export default function EditUser({ params }: PageProps) {
 	return <EditUserPage userId={params.userId} />;
 }
