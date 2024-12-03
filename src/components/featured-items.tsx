@@ -37,32 +37,6 @@ export function FeaturedItems() {
 		fetchFeaturedItems();
 	}, []);
 
-	useEffect(() => {
-		const fetchFeaturedItems = async () => {
-			try {
-				const response = await fetch(
-					`${API_HOST_BASE_URL}/products?featured=true`
-				);
-				if (response.ok) {
-					const data: Product[] = await response.json();
-					const productsWithImages = data.map((product) => ({
-						...product,
-						imageUrl:
-							product.imageUrl ||
-							'https://m.media-amazon.com/images/I/91gJhDXaehL._AC_UF894,1000_QL80_.jpg', // Use imageUrl from backend or fallback
-					}));
-					setFeaturedItems(productsWithImages);
-				} else {
-					console.error('Failed to fetch featured items');
-				}
-			} catch (error) {
-				console.error('Error fetching featured items:', error);
-			}
-		};
-
-		fetchFeaturedItems();
-	}, []);
-
 	const scroll = (direction: 'left' | 'right') => {
 		if (scrollContainerRef.current) {
 			const scrollAmount = 330;
