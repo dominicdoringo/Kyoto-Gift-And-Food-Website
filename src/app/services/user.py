@@ -143,15 +143,20 @@ def delete_user(db: Session, user_id: int, current_user: User):
     Delete a user account.
     Users can only delete their own account.
     """
-    user = get_user_by_id(db, user_id)
+    user = get_user_by_id(db=db, user_id=user_id)
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
 
     if user.id != current_user.id and not current_user.is_admin:
         raise HTTPException(status_code=403, detail="Not authorized to delete this user")
 
-    db.delete(user)
-    db.commit()
+    try:
+        db.delete(user)
+        db.commit()
+    except SQLAlchemyError as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail="Failed to delete user.")
+
     return
 
 
@@ -180,12 +185,17 @@ def delete_user_admin(db: Session, user_id: int):
     """
     Admin: Delete any user account without ownership checks.
     """
-    user = get_user_by_id(db, user_id)
+    user = get_user_by_id(db=db, user_id=user_id)
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
 
-    db.delete(user)
-    db.commit()
+    try:
+        db.delete(user)
+        db.commit()
+    except SQLAlchemyError as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail="Failed to delete user.")
+
     return {"detail": "User deleted successfully"}
 
 def update_user_admin(db: Session, user_id: int, user_update: UserUpdate):
