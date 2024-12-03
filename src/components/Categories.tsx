@@ -8,7 +8,7 @@ export function Categories() {
 			<ListItems title={'Snacks'} />
 			<ListItems title={'Drinks'} />
 			<ListItems title={'Frozen'} />
-			<ListItems title={'Misc'} />
+			<ListItems title={'Sushi'} />
 		</main>
 	);
 }

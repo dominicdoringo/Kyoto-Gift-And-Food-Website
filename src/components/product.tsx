@@ -26,6 +26,18 @@ interface ProductData {
 	images: string[];
 }
 
+interface Product {
+	id: string;
+	name: string;
+	description: string;
+	price: number;
+	category: string;
+	stock: number;
+	featured: boolean;
+	created_at: Date;
+	imageUrl: string;
+}
+
 interface ProductPageProps {
 	product: ProductData;
 }

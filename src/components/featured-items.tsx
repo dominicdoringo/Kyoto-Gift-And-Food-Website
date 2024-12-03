@@ -4,6 +4,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { FeaturedItemCard } from '@/components/ui/featured-item-card';
+import { Product } from '@/lib/types';
 
 const featuredItems = [
 	{

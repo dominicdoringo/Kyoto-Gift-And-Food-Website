@@ -1,9 +1,12 @@
 'use client';
 
+import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { FeaturedItemCard } from '@/components/ui/featured-item-card';
+import { getProductById } from '@/api/api';
+import { Product } from '@/lib/types';
 
 const listItems = [
 	{
@@ -54,6 +57,27 @@ const listItems = [
 export function ListItems({ title = '' }) {
 	const scrollContainerRef = useRef<HTMLDivElement>(null);
 
+	const [products, setProducts] = useState<Product | null>(null);
+
+	useEffect(() => {
+		// Define an array of product IDs you want to fetch
+		const productIds = ['1', '2', '3'];
+
+		// Fetch product data
+		const fetchProducts = async () => {
+			const fetchedProducts: Product[] = [];
+			for (let id of productIds) {
+				const product = await getProductById(id);
+				if (product != null) {
+					fetchedProducts.push(product);
+				}
+			}
+			setProducts(fetchedProducts);
+		};
+
+		fetchProducts();
+	}, []);
+
 	const scroll = (direction: 'left' | 'right') => {
 		if (scrollContainerRef.current) {
 			const scrollAmount = 330; // Card width + gap
@@ -79,7 +103,7 @@ export function ListItems({ title = '' }) {
 						ref={scrollContainerRef}
 						className="flex gap-6 overflow-x-hidden scroll-smooth pb-4"
 					>
-						{listItems.map((item, index) => (
+						{products.map((item, index) => (
 							<FeaturedItemCard
 								key={index}
 								{...item}
