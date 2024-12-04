@@ -1,6 +1,14 @@
 'use client';
 
-import { Home, Users, Settings, LogOut, PencilLine, Plus } from 'lucide-react';
+import {
+	Home,
+	Users,
+	Settings,
+	LogOut,
+	PencilLine,
+	Plus,
+	PackageCheck,
+} from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 
@@ -22,6 +30,7 @@ const adminMenuItems = [
 	{ icon: Users, label: 'List All Users', href: '/admin/users' },
 	{ icon: PencilLine, label: 'List All Products', href: '/admin/products' },
 	{ icon: Plus, label: 'Add New Product', href: '/admin/products/add' },
+	{ icon: PackageCheck, label: 'All Orders', href: '/admin/orders' },
 ];
 
 interface AdminSidebarProps {
