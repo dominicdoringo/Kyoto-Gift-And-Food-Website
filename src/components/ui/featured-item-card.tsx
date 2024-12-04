@@ -6,19 +6,34 @@ import { API_HOST_BASE_URL } from '@/lib/constants';
 import { Product } from '@/lib/types';
 import Link from 'next/link';
 
+interface FeaturedItemCardProps {
+	id: number;
+	name: string;
+	price: number;
+	description?: string;
+	imageUrl?: string;
+	category?: string;
+	stock?: number;
+	featured?: boolean;
+	created_at?: Date;
+}
+
 export function FeaturedItemCard({
 	id,
 	name,
 	price,
 	description = 'No description available.',
 	imageUrl = '/default-image.png',
-}: Product): JSX.Element {
+}: FeaturedItemCardProps): JSX.Element {
 	const { isLoggedIn } = useAuth();
 	const { toast } = useToast();
 	const router = useRouter();
 	const [addingToCart, setAddingToCart] = useState(false);
 
-	const handleAddToCart = async () => {
+	const handleAddToCart = async (e: React.MouseEvent<HTMLButtonElement>) => {
+		e.preventDefault(); // Prevent default button behavior
+		e.stopPropagation(); // Prevent event from bubbling up to parent elements
+
 		if (!isLoggedIn) {
 			toast({
 				title: 'Please Sign In',
@@ -83,6 +98,7 @@ export function FeaturedItemCard({
 
 	return (
 		<div className="w-72 sm:w-80 md:w-96 bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden flex flex-col">
+			{/* Link wraps only the image and product info */}
 			<Link
 				href={`/product/${id}`}
 				className="flex-grow"
@@ -104,17 +120,18 @@ export function FeaturedItemCard({
 							${price.toFixed(2)}
 						</span>
 					</div>
-					<button
-						onClick={handleAddToCart}
-						disabled={addingToCart}
-						className={`mt-4 w-full px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors duration-200 ${
-							addingToCart ? 'opacity-50 cursor-not-allowed' : ''
-						}`}
-					>
-						{addingToCart ? 'Adding...' : 'Add to Cart'}
-					</button>
 				</div>
 			</Link>
+			{/* Add to Cart button is outside the Link */}
+			<button
+				onClick={handleAddToCart}
+				disabled={addingToCart}
+				className={`mt-4 w-full px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors duration-200 ${
+					addingToCart ? 'opacity-50 cursor-not-allowed' : ''
+				}`}
+			>
+				{addingToCart ? 'Adding...' : 'Add to Cart'}
+			</button>
 		</div>
 	);
 }

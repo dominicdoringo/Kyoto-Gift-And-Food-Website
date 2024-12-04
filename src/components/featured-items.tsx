@@ -64,7 +64,7 @@ export function FeaturedItems() {
 					>
 						{featuredItems.map((item) => (
 							<FeaturedItemCard
-								key={item.id}
+								key={item.id} // Ensure unique key
 								id={item.id} // Pass the product ID
 								name={item.name}
 								price={item.price}
