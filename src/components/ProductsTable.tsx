@@ -99,9 +99,10 @@ export function ProductsTable({
 								>
 									Edit
 								</button>
+
 								<button
 									onClick={() => onDeleteProduct(product.id)}
-									className="text-red-500 hover:underline"
+									className="text-red-500 hover:underline" //cchange delete color button
 								>
 									Delete
 								</button>
