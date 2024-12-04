@@ -2,14 +2,24 @@
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
+from typing import List
 
 import app.services.user as user_service
+import app.services.order as order_service
+from app.core.auth import get_admin_user
 from app.core.auth import get_current_user
 from app.dependencies import get_db
 from app.schemas.user import (
     UserResponse,
     UserUpdate,
     UserUpdateResponse,
+)
+from app.schemas.order import (
+    Order,
+    OrderCreateResponse,
+    OrderUpdateResponse,
+    OrderStatusHistory,
+    OrderUpdate,
 )
 from app.models.user import User
 
@@ -76,4 +86,66 @@ def delete_user_account_admin(
     Admin: Delete any user account.
     """
     user_service.delete_user_admin(db=db, user_id=user_id)
+    return
+
+# ================== Admin Order Service Functions ==================
+
+@router.get("/orders", response_model=List[Order])
+def list_all_orders(
+    db: Session = Depends(get_db),
+    admin_user: User = Depends(get_admin_user)
+):
+    """
+    Admin: List all orders in the system.
+    """
+    orders = order_service.list_all_orders(db=db)
+    return orders
+
+
+@router.get("/orders/{order_id}", response_model=Order)
+def get_order_details_admin(
+    order_id: int,
+    db: Session = Depends(get_db),
+    admin_user: User = Depends(get_admin_user)
+):
+    """
+    Admin: Get details of any order by ID.
+    """
+    order = order_service.get_order_by_id(db=db, order_id=order_id)
+    if not order:
+        raise HTTPException(status_code=404, detail="Order not found")
+    return order
+
+
+@router.put("/orders/{order_id}", response_model=OrderUpdateResponse)
+def update_order_admin(
+    order_id: int,
+    order_update: OrderUpdate,
+    db: Session = Depends(get_db),
+    admin_user: User = Depends(get_admin_user)
+):
+    """
+    Admin: Update any order's information.
+    """
+    updated_order = order_service.update_order_admin(
+        db=db,
+        order_id=order_id,
+        order_update=order_update
+    )
+    return {"success": True, "updated_order": updated_order}
+
+
+@router.delete("/orders/{order_id}", status_code=204)
+def delete_order_admin(
+    order_id: int,
+    db: Session = Depends(get_db),
+    admin_user: User = Depends(get_admin_user)
+):
+    """
+    Admin: Delete any order.
+    """
+    order_service.delete_order_admin(
+        db=db,
+        order_id=order_id
+    )
     return

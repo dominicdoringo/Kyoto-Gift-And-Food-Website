@@ -14,6 +14,7 @@ from app.schemas.order import (
 )
 from app.services.cart import get_cart_items, clear_cart
 from app.services.reward import calculate_reward_points, update_reward_points
+from app.models.product import Product
 
 # Set the precision and rounding
 getcontext().prec = 28
@@ -166,3 +167,63 @@ def get_order_status_history(db: Session, user_id: int, order_id: int) -> List[O
         OrderStatusHistory(status=db_order.status, date=db_order.updated_at)
     ]
     return history
+
+# ================== Admin Order Service Functions ==================
+
+def list_all_orders(db: Session) -> List[Order]:
+    """
+    Retrieve all orders in the system, including user and product details.
+    """
+    orders = db.query(Order).options(
+        joinedload(Order.user),  # Include user details
+        joinedload(Order.items).joinedload(OrderItem.product)  # Include product details
+    ).all()
+    return orders
+
+def get_order_by_id(db: Session, order_id: int) -> Order:
+    """
+    Retrieve an order by its ID, including user and product details.
+    """
+    order = db.query(Order).options(
+        joinedload(Order.user),
+        joinedload(Order.items).joinedload(OrderItem.product)
+    ).filter(Order.id == order_id).first()
+    if not order:
+        raise HTTPException(status_code=404, detail="Order not found")
+    return order
+
+def update_order_admin(db: Session, order_id: int, order_update: OrderUpdate) -> Order:
+    """
+    Admin: Update any order's information.
+    """
+    db_order = db.query(Order).filter(Order.id == order_id).first()
+    if not db_order:
+        raise HTTPException(status_code=404, detail="Order not found")
+    
+    if order_update.status:
+        db_order.status = order_update.status
+    if hasattr(order_update, 'shipping_address') and order_update.shipping_address:
+        db_order.shipping_address = order_update.shipping_address
+    
+    db.commit()
+    db.refresh(db_order)
+    return db_order
+
+
+def delete_order_admin(db: Session, order_id: int):
+    """
+    Admin: Delete any order.
+    """
+    db_order = db.query(Order).filter(Order.id == order_id).first()
+    if not db_order:
+        raise HTTPException(status_code=404, detail="Order not found")
+    
+    # Optionally, handle restocking products if necessary
+    for item in db_order.items:
+        product = db.query(Product).filter(Product.id == item.product_id).first()
+        if product:
+            product.stock += item.quantity
+    
+    db.delete(db_order)
+    db.commit()
+    return {"detail": "Order deleted successfully"}
