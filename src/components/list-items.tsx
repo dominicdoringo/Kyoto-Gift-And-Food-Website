@@ -42,23 +42,6 @@ export function ListItems({ title = '', categoryType = 'snacks' }) {
 		fetchProductItems();
 	}, []);
 
-	/*useEffect(() => {
-		// Fetch product data
-		const fetchProducts = async () => {
-			try {
-				// Define an array of product IDs you want to fetch
-				const productIds = await getProductsByCategory(categoryType);
-				if(productIds != null) {
-					setProducts(productIds);
-				}
-			} catch (error) {
-				console.error('Error fetching product items:', error);
-			}
-		};
-
-		fetchProducts();
-	}, []);*/
-
 	const scroll = (direction: 'left' | 'right') => {
 		if (scrollContainerRef.current) {
 			const scrollAmount = 330; // Card width + gap
