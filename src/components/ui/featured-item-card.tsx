@@ -24,6 +24,7 @@ export function FeaturedItemCard({
 	price,
 	description = 'No description available.',
 	imageUrl = '/default-image.png',
+	stock = 0,
 }: FeaturedItemCardProps): JSX.Element {
 	const { isLoggedIn } = useAuth();
 	const { toast } = useToast();
@@ -115,23 +116,27 @@ export function FeaturedItemCard({
 					<p className="text-gray-600 dark:text-gray-300 flex-1 mt-2 line-clamp-3">
 						{description}
 					</p>
-					<div className="mt-4">
-						<span className="text-lg font-bold text-gray-900 dark:text-gray-100">
-							${price.toFixed(2)}
-						</span>
-					</div>
 				</div>
 			</Link>
-			{/* Add to Cart button is outside the Link */}
-			<button
-				onClick={handleAddToCart}
-				disabled={addingToCart}
-				className={`mt-4 w-full px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors duration-200 ${
-					addingToCart ? 'opacity-50 cursor-not-allowed' : ''
-				}`}
-			>
-				{addingToCart ? 'Adding...' : 'Add to Cart'}
-			</button>
+			<div className="px-4 py-2 flex flex-col">
+				<span className="text-lg font-bold text-gray-900 dark:text-gray-100">
+					${price.toFixed(2)}
+				</span>
+				{/* Add to Cart button is outside the Link */}
+				<button
+					onClick={handleAddToCart}
+					disabled={addingToCart || stock == 0}
+					className={`mt-4 w-full px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors duration-200 ${
+						addingToCart || stock == 0 ? 'opacity-50 cursor-not-allowed' : ''
+					}`}
+				>
+					{stock > 0
+						? addingToCart
+							? 'Adding...'
+							: 'Add to Cart'
+						: 'Out of Stock'}
+				</button>
+			</div>
 		</div>
 	);
 }
