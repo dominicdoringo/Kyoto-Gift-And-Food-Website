@@ -7,7 +7,7 @@
 		"build": "next build",
 		"start": "next start -p 8080",
 		"lint": "next lint",
-		"prepare": "husky",
+		"prepare": "husky install",
 		"pretty": "prettier --write ."
 	},
 	"dependencies": {
