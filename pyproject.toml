@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "kyotoBackend"
+name = "app"
 version = "0.1.0"  # Add a static version here
 description = 'Store App'
 readme = "README.md"
@@ -37,8 +37,8 @@ dependencies = [
     "pytest-cov>=3.0.0",
     "pytest-asyncio>=0.20.0",
     "httpx>=0.24.0",
-    "pytest-mock>=3.10.0"
-    "psycopg2-binary>=2.9.0"  
+    "pytest-mock>=3.10.0",
+    "psycopg2-binary>=2.9.0"
 ]
 
 [project.urls]
