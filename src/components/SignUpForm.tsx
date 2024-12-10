@@ -13,33 +13,41 @@ import {
 	FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { API_HOST_BASE_URL } from '@/lib/constants';
 import { useRouter } from 'next/navigation';
 import { Modal } from '@/components/ui/modal'; // Import your Modal component
+import { CheckCircle, XCircle } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
-// Zod schema for form validation
-const signUpSchema = z.object({
-	username: z
-		.string()
-		.min(3, { message: 'Username must be at least 3 characters' })
-		.max(20, { message: 'Username must be at most 20 characters' })
-		.regex(/^[a-zA-Z0-9_]+$/, {
-			message: 'Username can only contain letters, numbers, and underscores',
-		}),
-	email: z.string().email({ message: 'Invalid email address' }),
-	password: z
-		.string()
-		.min(8, { message: 'Password must be at least 8 characters' })
-		.regex(
-			/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-			{
-				message:
-					'Password must include uppercase, lowercase, number, and special character',
-			}
-		),
-});
+// Extended Zod schema to include confirmPassword and refine
+const signUpSchema = z
+	.object({
+		username: z
+			.string()
+			.min(3, { message: 'Username must be at least 3 characters' })
+			.max(20, { message: 'Username must be at most 20 characters' })
+			.regex(/^[a-zA-Z0-9_]+$/, {
+				message: 'Username can only contain letters, numbers, and underscores',
+			}),
+		email: z.string().email({ message: 'Invalid email address' }),
+		password: z
+			.string()
+			.min(8, { message: 'Password must be at least 8 characters' })
+			.regex(
+				/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+				{
+					message:
+						'Password must include uppercase, lowercase, number, and special character',
+				}
+			),
+		confirmPassword: z.string(),
+	})
+	.refine((data) => data.password === data.confirmPassword, {
+		message: 'Passwords do not match',
+		path: ['confirmPassword'],
+	});
 
 export function SignUpForm() {
 	const [isSubmitting, setIsSubmitting] = useState(false);
@@ -54,20 +62,51 @@ export function SignUpForm() {
 			username: '',
 			email: '',
 			password: '',
+			confirmPassword: '',
 		},
 	});
 
-	// Handle form submission
+	const password = form.watch('password', '');
+	const confirmPassword = form.watch('confirmPassword', '');
+
+	// Password requirements
+	const requirements = useMemo(() => {
+		return [
+			{
+				label: 'At least 8 characters',
+				test: (val: string) => val.length >= 8,
+			},
+			{
+				label: 'At least one uppercase letter',
+				test: (val: string) => /[A-Z]/.test(val),
+			},
+			{
+				label: 'At least one number',
+				test: (val: string) => /[0-9]/.test(val),
+			},
+			{
+				label: 'At least one special character (!@#$%^&*)',
+				test: (val: string) => /[!@#$%^&*]/.test(val),
+			},
+		];
+	}, []);
+
+	const allRequirementsMet = requirements.every((req) => req.test(password));
+	const passwordsMatch =
+		password && confirmPassword && password === confirmPassword;
+
 	async function onSubmit(values: z.infer<typeof signUpSchema>) {
 		setIsSubmitting(true);
 		try {
+			const { username, email, password } = values;
+
 			// Send POST request to the API
 			const response = await fetch(`${API_HOST_BASE_URL}/users/register`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
 				},
-				body: JSON.stringify(values),
+				body: JSON.stringify({ username, email, password }),
 			});
 
 			if (response.ok) {
@@ -160,6 +199,68 @@ export function SignUpForm() {
 									/>
 								</FormControl>
 								<FormMessage />
+								{/* Password Requirements */}
+								<div className="mt-2 space-y-1">
+									{requirements.map((req, index) => {
+										const passed = req.test(password);
+										return (
+											<div
+												key={index}
+												className="flex items-center gap-2 text-sm"
+											>
+												{passed ? (
+													<CheckCircle className="text-green-600 h-4 w-4" />
+												) : (
+													<XCircle className="text-red-600 h-4 w-4" />
+												)}
+												<span
+													className={cn(
+														passed ? 'text-green-600' : 'text-red-600'
+													)}
+												>
+													{req.label}
+												</span>
+											</div>
+										);
+									})}
+								</div>
+							</FormItem>
+						)}
+					/>
+
+					{/* Confirm Password */}
+					<FormField
+						control={form.control}
+						name="confirmPassword"
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>Confirm Password</FormLabel>
+								<FormControl>
+									<Input
+										placeholder="********"
+										type="password"
+										{...field}
+									/>
+								</FormControl>
+								<FormMessage />
+								{/* Password Match Indicator */}
+								{confirmPassword.length > 0 && (
+									<div className="mt-2 flex items-center gap-2 text-sm">
+										{passwordsMatch ? (
+											<>
+												<CheckCircle className="text-green-600 h-4 w-4" />
+												<span className="text-green-600">Passwords match</span>
+											</>
+										) : (
+											<>
+												<XCircle className="text-red-600 h-4 w-4" />
+												<span className="text-red-600">
+													Passwords do not match
+												</span>
+											</>
+										)}
+									</div>
+								)}
 							</FormItem>
 						)}
 					/>
@@ -168,7 +269,7 @@ export function SignUpForm() {
 					<Button
 						type="submit"
 						className="w-full"
-						disabled={isSubmitting}
+						disabled={isSubmitting || !allRequirementsMet || !passwordsMatch}
 					>
 						{isSubmitting ? 'Signing Up...' : 'Create Account'}
 					</Button>

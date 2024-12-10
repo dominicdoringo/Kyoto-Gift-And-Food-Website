@@ -5,16 +5,24 @@
 import React, { useState } from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { LogIn, Power, Menu, UserRoundPlus, UserCircle } from 'lucide-react'; // Updated Import
+import {
+	LogIn,
+	Power,
+	Menu,
+	UserRoundPlus,
+	UserCircle,
+	ShoppingCart,
+} from 'lucide-react';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { ModeToggle } from '@/components/mode-toggle';
 import Logo, { LogoMobile } from '@/components/Logo';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { useAuth } from '@/context/AuthContext'; // Import useAuth hook
+import { useAuth } from '@/context/AuthContext';
 
-const navList = [
+// navList no longer includes cart
+const navList: { label: React.ReactNode; link: string }[] = [
 	{
 		label: 'Featured',
 		link: '/',
@@ -26,10 +34,6 @@ const navList = [
 	{
 		label: 'About',
 		link: '/about',
-	},
-	{
-		label: 'Cart',
-		link: '/cart',
 	},
 ];
 
@@ -44,8 +48,11 @@ export function Navbar() {
 
 function MobileNavbar() {
 	const [isOpen, setIsOpen] = useState(false);
-	const { isLoggedIn, logout } = useAuth(); // Access auth state and logout function
+	const { isLoggedIn, logout } = useAuth();
 	const { toast } = useToast();
+
+	// Replace this with your actual cart logic
+	const cartCount = 2; // Example: number of items in cart. If 0, no cart icon.
 
 	const handleLogoutClick = () => {
 		logout();
@@ -78,7 +85,7 @@ function MobileNavbar() {
 						<div className="flex flex-col gap-1 pt-4">
 							{navList.map((item) => (
 								<NavbarItem
-									key={item.label}
+									key={item.link}
 									link={item.link}
 									label={item.label}
 									clickCallBack={() => setIsOpen(false)}
@@ -130,7 +137,7 @@ function MobileNavbar() {
 							variant="ghost"
 							onClick={handleLogoutClick}
 						>
-							<Power /> {/* Updated Icon */}
+							<Power />
 						</Button>
 					) : (
 						<>
@@ -146,6 +153,14 @@ function MobileNavbar() {
 							</Link>
 						</>
 					)}
+					{/* Show cart icon only if cartCount > 0 */}
+					{cartCount > 0 && (
+						<Link href="/cart">
+							<Button variant="ghost">
+								<ShoppingCart />
+							</Button>
+						</Link>
+					)}
 				</div>
 			</nav>
 		</div>
@@ -153,8 +168,11 @@ function MobileNavbar() {
 }
 
 function DesktopNavbar() {
-	const { isLoggedIn, logout } = useAuth(); // Access auth state and logout function
+	const { isLoggedIn, logout } = useAuth();
 	const { toast } = useToast();
+
+	// Replace this with your actual cart logic
+	const cartCount = 1; // Example: number of items in cart. If 0, no cart icon.
 
 	const handleLogoutClick = () => {
 		logout();
@@ -172,7 +190,7 @@ function DesktopNavbar() {
 					<div className="flex h-full">
 						{navList.map((item) => (
 							<NavbarItem
-								key={item.label}
+								key={item.link}
 								link={item.link}
 								label={item.label}
 							/>
@@ -186,7 +204,7 @@ function DesktopNavbar() {
 								variant="ghost"
 								onClick={handleLogoutClick}
 							>
-								<Power /> {/* Updated Icon */}
+								<Power />
 							</Button>
 							<Link href="/user">
 								<Button variant={'ghost'}>
@@ -208,6 +226,14 @@ function DesktopNavbar() {
 							</Link>
 						</>
 					)}
+					{/* Show cart icon only if cartCount > 0 */}
+					{cartCount > 0 && (
+						<Link href="/cart">
+							<Button variant="ghost">
+								<ShoppingCart />
+							</Button>
+						</Link>
+					)}
 					<ModeToggle />
 				</div>
 			</nav>
@@ -217,7 +243,7 @@ function DesktopNavbar() {
 
 interface NavbarItemProps {
 	link: string;
-	label: string;
+	label: React.ReactNode;
 	clickCallBack?: () => void;
 }
 
