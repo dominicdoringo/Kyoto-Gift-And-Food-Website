@@ -235,9 +235,8 @@ export default function ProductPage({ id }: ProductPageProps) {
 					</div>
 				</div>
 
-				{/* Add to Cart Button */}
 				<Button
-					className="w-full"
+					className="w-full bg-green-500 hover:bg-green-600 text-white"
 					size="lg"
 					onClick={handleAddToCart}
 					disabled={quantity < 1 || addingToCart}
