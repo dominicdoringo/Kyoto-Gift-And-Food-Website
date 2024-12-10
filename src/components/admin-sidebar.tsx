@@ -1,3 +1,5 @@
+// src/components/admin-sidebar.tsx
+
 'use client';
 
 import {
@@ -21,7 +23,7 @@ import {
 	SidebarMenuItem,
 	SidebarMenuButton,
 } from '@/components/ui/sidebar';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 
@@ -37,7 +39,6 @@ interface AdminSidebarProps {
 	userData: {
 		username: string;
 		email: string;
-		// Add more fields as needed
 	} | null;
 }
 
@@ -55,7 +56,10 @@ export function AdminSidebar({ userData }: AdminSidebarProps) {
 	};
 
 	return (
-		<Sidebar className="w-64">
+		<Sidebar
+			side="right"
+			className="w-64"
+		>
 			<SidebarHeader className="border-b border-border p-4">
 				<div className="flex items-center gap-3 overflow-hidden">
 					<Avatar>
