@@ -1,0 +1,18 @@
+services:
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: kyoto_db
+    ports:
+      - "5432:5432"
+
+  backend:
+    build: .
+    environment:
+      SQLALCHEMY_DATABASE_URL: "postgresql://postgres:password@db:5432/kyoto_db"
+    depends_on:
+      - db
+    ports:
+      - "8000:8000"

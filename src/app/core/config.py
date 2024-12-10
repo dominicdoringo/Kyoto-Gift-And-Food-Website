@@ -9,6 +9,9 @@ load_dotenv()
 class Settings(BaseSettings):
     SQLALCHEMY_DATABASE_URL: str
     SECRET_KEY: str
+    POSTGRES_USER: str
+    POSTGRES_PASSWORD: str
+    POSTGRES_DB: str
 
     # Email Settings
     SMTP_SERVER: str
