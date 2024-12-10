@@ -235,13 +235,22 @@ export default function ProductPage({ id }: ProductPageProps) {
 					</div>
 				</div>
 
+				{/* Add to Cart or Out of Stock Button */}
 				<Button
-					className="w-full bg-green-500 hover:bg-green-600 text-white"
+					className={`w-full ${
+						reader.stock === 0
+							? 'bg-gray-300 text-gray-700 cursor-not-allowed'
+							: 'bg-green-500 hover:bg-green-600 text-white'
+					}`}
 					size="lg"
 					onClick={handleAddToCart}
-					disabled={quantity < 1 || addingToCart}
+					disabled={reader.stock === 0 || quantity < 1 || addingToCart}
 				>
-					{addingToCart ? 'Adding...' : 'Add to Cart'}
+					{reader.stock === 0
+						? 'Out of Stock'
+						: addingToCart
+							? 'Adding...'
+							: 'Add to Cart'}
 				</Button>
 			</div>
 		</div>

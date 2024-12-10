@@ -125,10 +125,12 @@ export function FeaturedItemCard({
 				{/* Add to Cart button is outside the Link */}
 				<button
 					onClick={handleAddToCart}
-					disabled={addingToCart || stock == 0}
-					className={`mt-4 w-full px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors duration-200 ${
-						addingToCart || stock == 0 ? 'opacity-50 cursor-not-allowed' : ''
-					}`}
+					disabled={addingToCart || stock === 0}
+					className={`mt-4 w-full px-4 py-2 rounded-md transition-colors duration-200 ${
+						stock === 0
+							? 'bg-gray-300 text-gray-700 cursor-not-allowed'
+							: 'bg-green-600 text-white hover:bg-green-700'
+					} ${addingToCart ? 'opacity-50 cursor-not-allowed' : ''}`}
 				>
 					{stock > 0
 						? addingToCart
