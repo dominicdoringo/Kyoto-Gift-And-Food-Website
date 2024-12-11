@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "app"
-dynamic = ["version"]
+version = "0.1.0"  # Add a static version here
 description = 'Store App'
 readme = "README.md"
 requires-python = ">=3.12"
@@ -37,7 +37,8 @@ dependencies = [
     "pytest-cov>=3.0.0",
     "pytest-asyncio>=0.20.0",
     "httpx>=0.24.0",
-    "pytest-mock>=3.10.0"
+    "pytest-mock>=3.10.0",
+    "psycopg2-binary>=2.9.0"
 ]
 
 [project.urls]
@@ -45,8 +46,9 @@ Documentation = "https://github.com/Ugur Emre Dogan/app#readme"
 Issues = "https://github.com/Ugur Emre Dogan/app/issues"
 Source = "https://github.com/Ugur Emre Dogan/app"
 
-[tool.hatch.version]
-path = "src/app/__about__.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/app"]
 
 [tool.hatch.envs.default]
 python = "3.12"

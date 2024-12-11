@@ -1,0 +1,33 @@
+services:
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: kyoto_db
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d kyoto_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    # Optional: Persist data
+    # volumes:
+    #   - postgres_data:/var/lib/postgresql/data
+
+  backend:
+    build: .
+    environment:
+      SQLALCHEMY_DATABASE_URL: "postgresql://postgres:password@db:5432/kyoto_db"
+      SECRET_KEY: "secretkey"
+      SMTP_SERVER: "smtp.gmail.com"
+      SMTP_PORT: "587"
+      SMTP_USERNAME: "dominic.doringo@gmail.com"
+      SMTP_PASSWORD: "heegejktvydmfqrp"
+      EMAIL_FROM: "dominic.doringo@gmail.com"
+      EMAIL_FROM_NAME: "FastAPI"
+    depends_on:
+      - db
+    ports:
+      - "8000:8000"
